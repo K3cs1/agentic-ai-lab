@@ -1,6 +1,7 @@
 package com.nitan.agenticai.config;
 
 import com.nitan.agenticai.assistant.ChatAssistant;
+import dev.langchain4j.memory.chat.ChatMemoryProvider;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
@@ -27,7 +28,15 @@ class LlmConfig {
   ChatAssistant chatAssistant(ChatModel chatModel) {
     return AiServices.builder(ChatAssistant.class)
         .chatModel(chatModel)
-        .chatMemory(MessageWindowChatMemory.withMaxMessages(10)) //⭐
+        .chatMemoryProvider(chatMemoryProvider())//⚠️
+        .build();
+  }
+
+  @Bean //⭐
+  ChatMemoryProvider chatMemoryProvider() {
+    return memoryId -> MessageWindowChatMemory.builder()
+        .id(memoryId)//⚠️
+        .maxMessages(10)
         .build();
   }
 }

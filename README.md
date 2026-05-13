@@ -1,8 +1,9 @@
-### 02-03
+### 02-04
 
-# Delegating memory management to langchain4j
+# Using langchain4j's chat memory provider.
 
-Shifting the memory management to langchain4j. The test becomes a mere client.
+Implementing a stateful assistant using ChatMemoryProvider, which allows distributed, multi-tenant, 
+multi-session chat memory management and swapping between different memory management solutions.
 
 # Prerequisites
 
