@@ -1,8 +1,9 @@
-### 02-01
+### 02-02
 
-# Stateful assistant with manual memory
+# Using langchain4j's chat memory
 
-Implementing a stateful assistant using langchain4j and "manual memory".
+Implementing a stateful assistant using ChatMemory, which is a built-in memory management solution
+provided by langchain4j.
 
 # Prerequisites
 

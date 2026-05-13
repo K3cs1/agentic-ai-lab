@@ -23,7 +23,7 @@ class LlmConfig {
   }
 
   @Bean
-  ChatAssistant chaAssistant(ChatModel chatModel) {
+  ChatAssistant chatAssistant(ChatModel chatModel) {
     return AiServices.builder(ChatAssistant.class)
         .chatModel(chatModel)
         .build();
