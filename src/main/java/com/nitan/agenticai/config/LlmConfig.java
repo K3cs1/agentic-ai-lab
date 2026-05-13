@@ -1,8 +1,6 @@
 package com.nitan.agenticai.config;
 
-import com.nitan.agenticai.assistant.FunnyAssistant;
-import com.nitan.agenticai.assistant.SarcasticAssistant;
-import com.nitan.agenticai.assistant.StrictAssistant;
+import com.nitan.agenticai.assistant.ChatAssistant;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.service.AiServices;
@@ -10,37 +8,40 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-class LlmConfig {
+public class LlmConfig {
 
   private static final String BASE_OLLAMA_URL = "http://localhost:11434";
-  private static final String MODEL = "qwen2.5";
+  private static final String MODEL_QWEN = "qwen2.5";
+  private static final String MODEL_LLAMA = "llama3.1:8b";
+
 
   @Bean
-  ChatModel chatLanguageModel() {
+  ChatModel qwenModel() {
     return OllamaChatModel.builder()
         .baseUrl(BASE_OLLAMA_URL)
-        .modelName(MODEL)
+        .modelName(MODEL_QWEN)
         .build();
   }
 
   @Bean
-  FunnyAssistant jokingAssistant(ChatModel chatModel) {
-    return AiServices.builder(FunnyAssistant.class)
-        .chatModel(chatModel)
+  ChatModel llamaModel() {
+    return OllamaChatModel.builder()
+        .baseUrl(BASE_OLLAMA_URL)
+        .modelName(MODEL_LLAMA)
         .build();
   }
 
   @Bean
-  SarcasticAssistant sarcasticAssistant(ChatModel chatModel) {
-    return AiServices.builder(SarcasticAssistant.class)
-        .chatModel(chatModel)
+  ChatAssistant qwenChatAssistant(ChatModel qwenModel) {
+    return AiServices.builder(ChatAssistant.class)
+        .chatModel(qwenModel)
         .build();
   }
 
   @Bean
-  StrictAssistant strictAssistant(ChatModel chatModel) {
-    return AiServices.builder(StrictAssistant.class)
-        .chatModel(chatModel)
+  ChatAssistant llamaChatAssistant(ChatModel llamaModel) {
+    return AiServices.builder(ChatAssistant.class)
+        .chatModel(llamaModel)
         .build();
   }
 }

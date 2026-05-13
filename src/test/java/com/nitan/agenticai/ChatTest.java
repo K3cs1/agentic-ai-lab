@@ -1,40 +1,34 @@
 package com.nitan.agenticai;
 
 import static com.nitan.agenticai.util.Util.prettyPrint;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import com.nitan.agenticai.assistant.FunnyAssistant;
-import com.nitan.agenticai.assistant.SarcasticAssistant;
-import com.nitan.agenticai.assistant.StrictAssistant;
-import org.junit.jupiter.api.BeforeEach;
+import com.nitan.agenticai.assistant.ChatAssistant;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class ChatTest {
-  @Autowired FunnyAssistant funnyAssistant;
-  @Autowired SarcasticAssistant sarcasticAssistant;
-  @Autowired StrictAssistant strictAssistant;
 
-  private String message = "Tell me a joke about AI";
+  @Autowired
+  ChatAssistant qwenChatAssistant;
 
-  @BeforeEach
-  void setUp() {
+  @Autowired
+  ChatAssistant llamaChatAssistant;
+
+  @Test
+  void test() {
+    String message = "What is agentic ai?";
+
     prettyPrint("User", message);
-  }
+    String response1 = qwenChatAssistant.chat(message);
+    prettyPrint("Answer from model 1", response1);
 
-  @Test
-  void testFunnyAssistant() {
-    prettyPrint("Funny Assistant", funnyAssistant.chat(message));
-  }
+    prettyPrint("User", message);
+    String response2 = llamaChatAssistant.chat(message);
+    prettyPrint("Answer from model 2", response2);
 
-  @Test
-  void testSarcasticAssistant() {
-    prettyPrint("Sarcastic Assistant", sarcasticAssistant.chat(message));
-  }
-
-  @Test
-  void testStrictAssistant() {
-    prettyPrint("Strict Assistat", strictAssistant.chat(message));
+    assertNotEquals(response1, response2);// ⚠️
   }
 }
