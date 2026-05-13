@@ -1,0 +1,7 @@
+
+logging:
+  level:
+    io.netty.resolver.dns.DnsServerAddressStreamProviders: OFF
+    sun.rmi.transport.tcp: OFF
+  pattern:
+    console: "%m%n"
