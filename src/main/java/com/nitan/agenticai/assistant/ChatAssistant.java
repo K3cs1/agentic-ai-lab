@@ -4,8 +4,10 @@ import dev.langchain4j.service.SystemMessage;
 
 public interface ChatAssistant {
 
-  @SystemMessage("""
+  @SystemMessage(
+      """
         You are a helpful assistant.
-      """)
+      """
+  )
   String chat(String userMessage);
 }

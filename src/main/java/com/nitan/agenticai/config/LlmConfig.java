@@ -8,40 +8,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class LlmConfig {
+class LlmConfig {
 
   private static final String BASE_OLLAMA_URL = "http://localhost:11434";
-  private static final String MODEL_QWEN = "qwen2.5";
-  private static final String MODEL_LLAMA = "llama3.1:8b";
-
+  private static final String MODEL = "qwen2.5";
 
   @Bean
-  ChatModel qwenModel() {
+  ChatModel chatLanguageModel() {
     return OllamaChatModel.builder()
         .baseUrl(BASE_OLLAMA_URL)
-        .modelName(MODEL_QWEN)
+        .modelName(MODEL)
         .build();
   }
 
   @Bean
-  ChatModel llamaModel() {
-    return OllamaChatModel.builder()
-        .baseUrl(BASE_OLLAMA_URL)
-        .modelName(MODEL_LLAMA)
-        .build();
-  }
-
-  @Bean
-  ChatAssistant qwenChatAssistant(ChatModel qwenModel) {
+  ChatAssistant jokingAssistant(ChatModel chatModel) {
     return AiServices.builder(ChatAssistant.class)
-        .chatModel(qwenModel)
-        .build();
-  }
-
-  @Bean
-  ChatAssistant llamaChatAssistant(ChatModel llamaModel) {
-    return AiServices.builder(ChatAssistant.class)
-        .chatModel(llamaModel)
+        .chatModel(chatModel)
         .build();
   }
 }

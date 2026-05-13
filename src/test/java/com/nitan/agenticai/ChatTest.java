@@ -1,7 +1,8 @@
 package com.nitan.agenticai;
 
 import static com.nitan.agenticai.util.Util.prettyPrint;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.nitan.agenticai.assistant.ChatAssistant;
 import org.junit.jupiter.api.Test;
@@ -11,24 +12,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class ChatTest {
 
-  @Autowired
-  ChatAssistant qwenChatAssistant;
-
-  @Autowired
-  ChatAssistant llamaChatAssistant;
+  @Autowired private ChatAssistant chatAssistant;
 
   @Test
   void test() {
-    String message = "What is agentic ai?";
 
+    String message = "Tell me a joke about AI.";
     prettyPrint("User", message);
-    String response1 = qwenChatAssistant.chat(message);
-    prettyPrint("Answer from model 1", response1);
-
-    prettyPrint("User", message);
-    String response2 = llamaChatAssistant.chat(message);
-    prettyPrint("Answer from model 2", response2);
-
-    assertNotEquals(response1, response2);// ⚠️
+    String response = chatAssistant.chat(message);
+    prettyPrint("Assistant", response);
+    assertNotNull(response);
+    assertFalse(response.isBlank());
   }
 }
