@@ -1,9 +1,8 @@
-### 03-05
+### 03-06
 
-# Basics of similarity search
+# Langchain4j in memory vector store search
 
-Basic example of similarity search.
-Check docs/cosine_similarity.html for more details.
+Example of using langchain4j to populate an in-memory vector store, then retrieve information.
 
 # Prerequisites
 None

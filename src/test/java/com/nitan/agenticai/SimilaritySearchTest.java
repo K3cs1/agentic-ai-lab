@@ -1,66 +1,60 @@
 package com.nitan.agenticai;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static com.nitan.agenticai.util.Util.prettyPrint;
 
-import com.nitan.agenticai.model.VectorDocument;
-import java.util.Comparator;
+import dev.langchain4j.data.document.Document;
+import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
+import dev.langchain4j.data.embedding.Embedding;
+import dev.langchain4j.data.segment.TextSegment;
+import dev.langchain4j.model.embedding.EmbeddingModel;
+import dev.langchain4j.store.embedding.EmbeddingSearchRequest;
+import dev.langchain4j.store.embedding.EmbeddingSearchResult;
+import dev.langchain4j.store.embedding.EmbeddingStore;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest
 class SimilaritySearchTest {
 
-    @Test
-    void shouldReturnMostSimilarDocument() {
+  @Autowired private EmbeddingModel embeddingModel;
 
-      List<VectorDocument> store = List.of(
-          // Quadrant I - Theme: Time Off & Benefits
-          new VectorDocument("Employees have 25 vacation days", new double[]{0.85, 0.25}),
-          new VectorDocument("Employees get 10 paid sick leaves annually", new double[]{0.70, 0.40}),
+  @Autowired private EmbeddingStore store;
 
-          // Quadrant II - Theme: Remote Work & Flexibility
-          new VectorDocument("Remote work is fully supported globally", new double[]{-0.75, 0.35}),
-          new VectorDocument("Flexible working hours allow custom schedules", new double[]{-0.60, 0.55}),
+  @BeforeEach
+  void populateVectorStore() {
+    System.out.println("Populating the vector store with documents...");
+    Document doc1 =
+        FileSystemDocumentLoader.loadDocument("src/main/resources/docs/HR-corporate card.txt");
+    Document doc2 =
+        FileSystemDocumentLoader.loadDocument("src/main/resources/docs/HR-referals.txt");
+    Document doc3 =
+        FileSystemDocumentLoader.loadDocument("src/main/resources/docs/HR-vacation.txt");
 
-          // Quadrant III - Theme: Fees & Penalties
-          new VectorDocument("Office parking spaces require a monthly fee", new double[]{-0.45, -0.65}),
-          new VectorDocument("Lost keycards incur a replacement penalty fee", new double[]{-0.30, -0.75}),
+    List<Document> docs = List.of(doc1, doc2, doc3);
 
-          // Quadrant IV - Theme: Compensation & Bonuses
-          new VectorDocument("Overtime hours are compensated at double rate", new double[]{0.65, -0.45}),
-          new VectorDocument("Annual performance bonuses are paid in December", new double[]{0.80, -0.25})
-      );
+    docs.forEach(doc -> {
+      Embedding embedding = embeddingModel.embed(doc.text()).content();
+      store.add(embedding, TextSegment.from(doc.text()));
+    });
+    System.out.println("Documents ingested successfully!");
+  }
 
-        double[] queryEmbedding = {0.8, 0.3};//How many vacation days do I get?
+  @Test
+  void shouldRetrieveMostRelevantDocument() {
+    Embedding query = embeddingModel.embed("How many vacation days can I get?").content();
 
-        VectorDocument bestMatch =
-                store.stream()
-                        .max(
-                                Comparator.comparingDouble(
-                                        doc -> cosineSimilarity(
-                                                queryEmbedding,
-                                                doc.embedding()
-                                        )
-                                )
-                        )
-                        .orElseThrow();
+    EmbeddingSearchResult<TextSegment> result = store.search(
+        EmbeddingSearchRequest.builder()
+            .queryEmbedding(query)
+            .maxResults(1)
+            .build()
+    );
 
-        assertEquals(
-                "Employees have 25 vacation days",
-                bestMatch.text()
-        );
-    }
-
-    private static double cosineSimilarity(double[] a, double[] b) {
-        double dot = 0;
-        double normA = 0;
-        double normB = 0;
-
-        for (int i = 0; i < a.length; i++) {
-            dot += a[i] * b[i];
-            normA += a[i] * a[i];
-            normB += b[i] * b[i];
-        }
-
-        return dot / (Math.sqrt(normA) * Math.sqrt(normB));
-    }
+    result.matches().forEach(match -> {
+      prettyPrint("MATCH", match.toString());
+    });
+  }
 }
