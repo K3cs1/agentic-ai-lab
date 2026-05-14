@@ -1,10 +1,9 @@
-### 03-04
+### 03-05
 
-# Retrieval-Augumented generation with langchain4j.
+# Basics of similarity search
 
-This is a simple implementation of RAG, using langchain4j content retrieval abstraction.
+Basic example of similarity search.
+Check docs/cosine_similarity.html for more details.
 
 # Prerequisites
-
-- Ollama installed and running
-- qwen2.5 model pulled locally
+None

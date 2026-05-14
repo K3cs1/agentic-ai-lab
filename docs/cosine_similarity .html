@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2D Vector Space with Live Math Inspector</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    h2 { margin-top: 0; color: #222; }
+
+    .presets-section {
+      background-color: #f1f3f5;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .presets-title {
+      font-size: 14px;
+      font-weight: bold;
+      color: #495057;
+      margin-bottom: 10px;
+    }
+    .presets-grid {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .preset-btn {
+      background-color: white;
+      border: 1px solid #ced4da;
+      padding: 8px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s ease;
+      color: #495057;
+    }
+    .preset-btn:hover {
+      background-color: #007bff;
+      color: white;
+      border-color: #007bff;
+      transform: translateY(-1px);
+    }
+
+    .layout {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .left-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      min-width: 450px;
+    }
+    .right-column {
+      flex: 1.2;
+      min-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+    .input-group label { font-weight: bold; font-size: 14px; }
+    input[type="number"] {
+      width: 70px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      text-align: center;
+    }
+    canvas {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th, td {
+      text-align: left;
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    th { background-color: #f1f3f5; color: #495057; }
+
+    /* Interactive Row Highlighting */
+    tbody tr {
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+    tbody tr:hover {
+      background-color: #f1f7ff !important;
+    }
+    .active-row {
+      background-color: #e6f0fa;
+    }
+
+    .score-badge {
+      font-weight: bold;
+      color: #007bff;
+    }
+
+    /* Dedicated Formula Panel Styling */
+    .inspector-panel {
+      background-color: #2d3436;
+      color: #fff;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .inspector-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #a4b0be;
+      margin-bottom: 10px;
+      font-weight: bold;
+      border-bottom: 1px solid #4b5563;
+      padding-bottom: 5px;
+    }
+    .inspector-body {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      margin: 0;
+      white-space: pre-wrap;
+    }
+
+    .caption {
+      font-size: 12px;
+      color: #6c757d;
+      margin-top: 8px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="presets-section">
+    <div class="presets-title">Select a query sample to rotate the vector orientation:</div>
+    <div class="presets-grid">
+      <button class="preset-btn" onclick="applyPreset(0.8, 0.3)">"How many vacation days do I get?" → [0.8, 0.3]</button>
+      <button class="preset-btn" onclick="applyPreset(-0.7, 0.4)">"Can I work from my home setup?" → [-0.7, 0.4]</button>
+      <button class="preset-btn" onclick="applyPreset(-0.4, -0.7)">"Is there a fee for office parking?" → [-0.4, -0.7]</button>
+      <button class="preset-btn" onclick="applyPreset(0.7, -0.4)">"When are performance bonuses distributed?" → [0.7, -0.4]</button>
+    </div>
+  </div>
+
+  <div class="input-group">
+    <label>Query Vector [Q]:</label>
+    [
+    <input type="number" id="q0" value="0.8" step="0.1" oninput="updateVisualization()">,
+    <input type="number" id="q1" value="0.3" step="0.1" oninput="updateVisualization()">
+    ]
+  </div>
+
+  <div class="layout">
+    <div class="left-column">
+      <canvas id="vectorCanvas" width="450" height="450"></canvas>
+      <div class="caption">X-Axis = Dim 1 | Y-Axis = Dim 2. Hover over table rows to calculate specific metrics.</div>
+    </div>
+
+    <div class="right-column">
+      <div>
+        <h3 style="margin-top:0; margin-bottom:10px;">Cosine Similarity Standings</h3>
+        <table>
+          <thead>
+          <tr>
+            <th>Doc</th>
+            <th>Document Text</th>
+            <th>Vector [D]</th>
+            <th>Similarity</th>
+          </tr>
+          </thead>
+          <tbody id="rankingTable">
+          </tbody>
+        </table>
+      </div>
+
+      <div class="inspector-panel">
+        <div class="inspector-title" id="inspectorTitle">Formula Breakdown</div>
+        <pre class="inspector-body" id="inspectorBody">Hover over a document row to load real-time equation values...</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const documents = [
+    { id: "D1", text: "Employees have 25 vacation days", vector: [0.85, 0.25], color: "#2bcbba" },
+    { id: "D2", text: "Employees get 10 paid sick leaves annually", vector: [0.70, 0.40], color: "#0fbcf9" },
+    { id: "D3", text: "Remote work is fully supported globally", vector: [-0.75, 0.35], color: "#8854d0" },
+    { id: "D4", text: "Flexible working hours allow custom schedules", vector: [-0.60, 0.55], color: "#3867d6" },
+    { id: "D5", text: "Office parking spaces require a monthly fee", vector: [-0.45, -0.65], color: "#eb3b5a" },
+    { id: "D6", text: "Lost keycards incur a replacement penalty fee", vector: [-0.30, -0.75], color: "#ff5e57" },
+    { id: "D7", text: "Overtime hours are compensated at double rate", vector: [0.65, -0.45], color: "#fa8231" },
+    { id: "D8", text: "Annual performance bonuses are paid in December", vector: [0.80, -0.25], color: "#ffa801" }
+  ];
+
+  const canvas = document.getElementById('vectorCanvas');
+  const ctx = canvas.getContext('2d');
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  const scale = 190;
+
+  // Object to globally track math data matching current configuration frame
+  let trackingCalculations = {};
+
+  function applyPreset(x, y) {
+    document.getElementById('q0').value = x;
+    document.getElementById('q1').value = y;
+    updateVisualization();
+  }
+
+  function dotProduct(a, b) {
+    return a[0] * b[0] + a[1] * b[1];
+  }
+
+  function magnitude(a) {
+    return Math.sqrt(a[0] * a[0] + a[1] * a[1]);
+  }
+
+  function drawArrow(x1, y1, x2, y2, color, isDashed = false) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.5;
+    if (isDashed) ctx.setLineDash([4, 4]);
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+
+    const angle = Math.atan2(y2 - y1, x2 - x1);
+    ctx.beginPath();
+    ctx.fillStyle = color;
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(x2 - 10 * Math.cos(angle - Math.PI / 6), y2 - 10 * Math.sin(angle - Math.PI / 6));
+    ctx.lineTo(x2 - 10 * Math.cos(angle + Math.PI / 6), y2 - 10 * Math.sin(angle + Math.PI / 6));
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Function called by mouse events on the row items
+  function inspectRowMath(docId) {
+    // Clear previous selection styling
+    const rows = document.querySelectorAll('#rankingTable tr');
+    rows.forEach(r => r.classList.remove('active-row'));
+
+    // Highlight chosen target row
+    const activeRow = document.getElementById(`row-${docId}`);
+    if(activeRow) activeRow.classList.add('active-row');
+
+    // Swap out text content inside inspector view panel
+    if (trackingCalculations[docId]) {
+      document.getElementById('inspectorTitle').innerText = `Formula Breakdown for Document ${docId}`;
+      document.getElementById('inspectorBody').innerText = trackingCalculations[docId].text;
+    }
+  }
+
+  function updateVisualization() {
+    const q0 = parseFloat(document.getElementById('q0').value) || 0;
+    const q1 = parseFloat(document.getElementById('q1').value) || 0;
+    const queryVector = [q0, q1];
+
+    const magQ = magnitude(queryVector);
+    trackingCalculations = {}; // Wipe cache clean
+
+    const rankedDocs = documents.map(doc => {
+      const dot = dotProduct(queryVector, doc.vector);
+      const magD = magnitude(doc.vector);
+      const score = (magQ === 0 || magD === 0) ? 0 : dot / (magQ * magD);
+
+      const mathText =
+          `Formula:  Q · D / (||Q|| × ||D||)
+
+1. Dot Product (Numerator):
+   (${queryVector[0]} × ${doc.vector[0]}) + (${queryVector[1]} × ${doc.vector[1]})
+   = ${dot.toFixed(4)}
+
+2. Vector Lengths (Denominator):
+   ||Q|| = √(${queryVector[0]}² + ${queryVector[1]}²) = ${magQ.toFixed(4)}
+   ||D|| = √(${doc.vector[0]}² + ${doc.vector[1]}²) = ${magD.toFixed(4)}
+   Product = ${magQ.toFixed(4)} × ${magD.toFixed(4)} = ${(magQ * magD).toFixed(4)}
+
+3. Final Cosine Division:
+   ${dot.toFixed(4)} / ${(magQ * magD).toFixed(4)}
+   = ${score.toFixed(4)}`;
+
+      // Keep reference linked to docId
+      trackingCalculations[doc.id] = { text: mathText };
+
+      return { ...doc, score };
+    }).sort((a, b) => b.score - a.score);
+
+    // Render standard rows
+    const tbody = document.getElementById('rankingTable');
+    tbody.innerHTML = '';
+
+    rankedDocs.forEach(doc => {
+      const row = `<tr id="row-${doc.id}" onmouseenter="inspectRowMath('${doc.id}')">
+                <td><span style="color:${doc.color}; font-weight:bold;">${doc.id}</span></td>
+                <td>${doc.text}</td>
+                <td>[${doc.vector.map(v => v.toFixed(2)).join(', ')}]</td>
+                <td class="score-badge">${doc.score.toFixed(4)}</td>
+            </tr>`;
+      tbody.innerHTML += row;
+    });
+
+    // Default to loading the highest matching document calculus right away
+    if(rankedDocs.length > 0) {
+      inspectRowMath(rankedDocs[0].id);
+    }
+
+    // Draw Canvas Chart Space Coordinates
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.strokeStyle = '#eef0f2';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(cx, cy, scale, 0, 2 * Math.PI);
+    ctx.arc(cx, cy, scale * 0.5, 0, 2 * Math.PI);
+    ctx.stroke();
+
+    ctx.strokeStyle = '#ccc';
+    ctx.beginPath();
+    ctx.moveTo(0, cy); ctx.lineTo(canvas.width, cy);
+    ctx.moveTo(cx, 0); ctx.lineTo(cx, canvas.height);
+    ctx.stroke();
+
+    ctx.fillStyle = '#888';
+    ctx.font = '11px sans-serif';
+    ctx.fillText('dim 1 (X) →', canvas.width - 75, cy - 8);
+    ctx.fillText('dim 2 (Y) ↑', cx + 8, 18);
+
+    rankedDocs.forEach(doc => {
+      const targetX = cx + doc.vector[0] * scale;
+      const targetY = cy - doc.vector[1] * scale;
+      drawArrow(cx, cy, targetX, targetY, doc.color, false);
+
+      ctx.fillStyle = '#222';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.fillText(doc.id, targetX + 5, targetY - 4);
+    });
+
+    const qTargetX = cx + queryVector[0] * scale;
+    const qTargetY = cy - queryVector[1] * scale;
+    drawArrow(cx, cy, qTargetX, qTargetY, '#dc3545', true);
+    ctx.fillStyle = '#dc3545';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.fillText('Query', qTargetX + 6, qTargetY - 4);
+  }
+
+  updateVisualization();
+</script>
+
+</body>
+</html>
