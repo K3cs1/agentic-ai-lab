@@ -1,7 +1,9 @@
 package com.nitan.agenticai.util;
 
 import dev.langchain4j.data.document.Document;
+import dev.langchain4j.data.document.DocumentSplitter;
 import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
+import dev.langchain4j.data.document.splitter.DocumentSplitters;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
@@ -28,16 +30,13 @@ class VectorStoreInitializer {
     String collectionName = "company-kb";
 
     try {
-      // 1. Check if the collection exists
       boolean exists = client.collectionExistsAsync(collectionName).get();
 
-      // 2. If it exists, delete it first
       if (exists) {
         System.out.println("Collection '" + collectionName + "' exists. Deleting...");
         client.deleteCollectionAsync(collectionName).get();
       }
 
-      // 3. Create the collection
       System.out.println("Creating collection '" + collectionName + "'...");
       client
           .createCollectionAsync(
@@ -60,23 +59,30 @@ class VectorStoreInitializer {
     // populate the vector store
     Document doc1 =
         FileSystemDocumentLoader.loadDocument("src/main/resources/docs/HR-corporate card.txt");
-    doc1.metadata().put("department", "HR"); // ⭐
+    doc1.metadata().put("department", "HR");
     Document doc2 =
         FileSystemDocumentLoader.loadDocument("src/main/resources/docs/HR-referals.txt");
-    doc2.metadata().put("department", "HR"); // ⭐
+    doc2.metadata().put("department", "HR");
     Document doc3 =
         FileSystemDocumentLoader.loadDocument("src/main/resources/docs/HR-vacation.txt");
-    doc3.metadata().put("department", "HR"); // ⭐
+    doc3.metadata().put("department", "HR");
     Document doc4 =
         FileSystemDocumentLoader.loadDocument("src/main/resources/docs/SUPPORT-contacts.txt");
-    doc4.metadata().put("department", "SUPPORT"); // ⭐
+    doc4.metadata().put("department", "SUPPORT");
 
     List<Document> documents = List.of(doc1, doc2, doc3, doc4);
+
+    DocumentSplitter splitter =
+        DocumentSplitters.recursive(
+            300, // ⭐ max characters per chunk
+            50 // ⭐ overlap between chunks
+            );
 
     EmbeddingStoreIngestor ingestor =
         EmbeddingStoreIngestor.builder()
             .embeddingModel(embeddingModel)
             .embeddingStore(embeddingStore)
+            .documentSplitter(splitter) // ⭐
             .build();
 
     ingestor.ingest(documents);

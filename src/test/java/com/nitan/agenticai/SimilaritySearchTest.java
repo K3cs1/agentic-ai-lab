@@ -31,13 +31,13 @@ class SimilaritySearchTest {
     EmbeddingSearchRequest embeddingSearchRequest =
         EmbeddingSearchRequest.builder()
             .queryEmbedding(queryEmbedding)
-            .maxResults(5) // ⚠️
-            .filter(myFilter) // ⭐
+            .maxResults(5)
+            .filter(myFilter)
             .build();
 
     EmbeddingSearchResult matches = embeddingStore.search(embeddingSearchRequest);
 
-    matches.matches().forEach(match -> prettyPrint("MATCH",match.toString()));
+    matches.matches().forEach(match -> prettyPrint("MATCH", match.toString()));
     assertTrue(matches.matches().size() > 0);
   }
 }
