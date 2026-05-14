@@ -1,4 +1,9 @@
-
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/agentic
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
 logging:
   level:
     io.netty.resolver.dns.DnsServerAddressStreamProviders: OFF

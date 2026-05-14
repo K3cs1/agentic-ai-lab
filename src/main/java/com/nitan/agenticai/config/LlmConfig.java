@@ -7,9 +7,9 @@ import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.store.memory.chat.ChatMemoryStore;
-import dev.langchain4j.store.memory.chat.InMemoryChatMemoryStore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
 class LlmConfig {
@@ -28,26 +28,26 @@ class LlmConfig {
   }
 
   @Bean
-  ChatAssistant statefulChatAssistant(ChatModel chatModel) {
+  ChatAssistant statefulChatAssistant(ChatModel chatModel, JdbcTemplate jdbcTemplate) {
     return AiServices.builder(ChatAssistant.class)
         .chatModel(chatModel)
-        .chatMemoryProvider(chatMemoryProvider())
+        .chatMemoryProvider(chatMemoryProvider(jdbcTemplate))
         .build();
   }
 
 
-  @Bean //⭐
-  ChatMemoryStore chatMemoryStore() {
-    return new InMemoryChatMemoryStore();
+  @Bean
+  ChatMemoryStore chatMemoryStore(JdbcTemplate jdbcTemplate) {
+    return new PostgresChatMemoryStore(jdbcTemplate); //⭐
   }
 
   @Bean
-  ChatMemoryProvider chatMemoryProvider() {
+  ChatMemoryProvider chatMemoryProvider(JdbcTemplate jdbcTemplate) {
     return memoryId ->
         MessageWindowChatMemory.builder()
             .id(memoryId)
             .maxMessages(100)
-            .chatMemoryStore(chatMemoryStore()) //⭐
+            .chatMemoryStore(chatMemoryStore(jdbcTemplate))
             .build();
   }
 }
