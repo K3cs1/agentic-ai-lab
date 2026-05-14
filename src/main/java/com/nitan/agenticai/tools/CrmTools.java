@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class CrmTools {
 
-  @Tool("Get Client by name")
+  @Tool("Get Client by name.")
   public Client getClientByName(String name) {
     log.info("Searching in the CRM for client with name: {} ", name);
     if ("Acme Corporation".equals(name)) {
@@ -43,7 +43,8 @@ public class CrmTools {
     throw new IllegalArgumentException("Client not found: " + name);
   }
 
-  @Tool("Get ClientType by client id")//⭐
+  @Tool(
+      "Get client type using the client's id.To be use before calculating the discount for a client.")
   public ClientType getClientTypeById(Long clientId) {
     log.info("Searching for client type of the client: {}", clientId);
     if (clientId == 1L) {
@@ -54,6 +55,6 @@ public class CrmTools {
       return ClientType.BRONZE;
     }
 
-    throw new IllegalArgumentException("Client not found: " + clientId);
+    throw new IllegalArgumentException("Unknown client type: " + clientId);
   }
 }
