@@ -1,30 +1,17 @@
-### 02-06
+### 03-01
 
-# Postgres chat memory store.
+# Halucinating helpful assistant.
 
-Using a Postgres chat memory store implementation to persist the conversation history in a stateful
-assistant implementation.
+Returning to stateless assistants by implementing a stateless assistant using langchain4j. In the 
+previous session the focus has been on memory, but memory is not knowledge. 
 
-This version includes an example of how to set up a Postgres database to store the conversation history
-and configure the chat memory store to use the Postgres implementation, allowing for scalable and persistent
-memory management in the assistant. The database stores the full conversation history, but MessageWindowChatMemory
-controls how much of that history is included in the prompt sent to the model.
+This session is about giving the agent access to knowledge, and then letting it use that knowledge 
+to answer questions.
+
+This version is obviously trying to be helpful, but it is halucinating helpfulness, as it is not 
+actually connected to any knowledge source. 
 
 # Prerequisites
 
 - Ollama installed and running
 - qwen2.5 model pulled locally
-- ***postgres database running and accessible on your localhost***
-
-## Initial Setup
-Check application.yml for the datasource connection details.
-
-Then create the table chat_memory:
-
-CREATE TABLE chat_memory (
-memory_id TEXT NOT NULL,
-message_index INT NOT NULL,
-role TEXT NOT NULL,
-content TEXT NOT NULL,
-PRIMARY KEY (memory_id, message_index)
-);
