@@ -1,8 +1,7 @@
 package com.nitan.agenticai.config;
 
 import com.nitan.agenticai.assistant.AgenticAssistant;
-import com.nitan.agenticai.tools.HumanInputTool;
-import com.nitan.agenticai.tools.WeatherTool;
+import com.nitan.agenticai.tools.CrmTools;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.service.AiServices;
@@ -13,22 +12,22 @@ import org.springframework.context.annotation.Configuration;
 class LlmConfig {
 
   private static final String BASE_OLLAMA_URL = "http://localhost:11434";
-  private static final String MODEL = "qwen3:8b";
+  private static final String MODEL = "qwen2.5";
 
   @Bean
   ChatModel chatLanguageModel() {
     return OllamaChatModel.builder()
         .baseUrl(BASE_OLLAMA_URL)
         .modelName(MODEL)
-        .temperature(0.2)
+        .temperature(0.0)
         .build();
   }
 
   @Bean
-  AgenticAssistant agenticAssistant(ChatModel chatModel, HumanInputTool humanInputTool, WeatherTool weatherTool) {
+  AgenticAssistant agenticAssistant(ChatModel chatModel, CrmTools crmTools) {
     return AiServices.builder(AgenticAssistant.class)
         .chatModel(chatModel)
-        .tools(humanInputTool, weatherTool)
+        .tools(crmTools)
         .build();
   }
 }

@@ -1,30 +1,24 @@
 package com.nitan.agenticai;
 
 import static com.nitan.agenticai.util.Util.prettyPrint;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.nitan.agenticai.assistant.AgenticAssistant;
-import org.springframework.boot.WebApplicationType;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.ConfigurableApplicationContext;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest
 class AgenticTest {
 
-  public static void main(String[] args) {
-    ConfigurableApplicationContext ctx =
-        new SpringApplicationBuilder(AgenticAiLabApplication.class)
-            .web(WebApplicationType.NONE)
-            .run(args);
+  @Autowired private AgenticAssistant agenticAssistant;
 
-    AgenticAssistant assistant = ctx.getBean(AgenticAssistant.class);
-
-    String message = "What would be the weather in my city tomorrow?";
-
-    prettyPrint("User message",message);
-
-    String response = assistant.handle(message);
-
-    prettyPrint("Final response",response);
-
-    ctx.close();
+  @Test
+  void test() {
+    String message = "Can you tell the address of Acme Corporation?";
+    prettyPrint("User", message);
+    String response = agenticAssistant.handle(message);
+    prettyPrint("Assistant", response);
+    assertNotNull(response);
   }
 }

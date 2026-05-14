@@ -1,9 +1,9 @@
-### 04-06
+### 04-07
 
-# Human in the loop.
-
-A simple example of human in the loop input.
+# Using structured output tools.
+Implementing an assistant that uses a structured output tool to generate the response.
 
 # Prerequisites
-- Ollama installed and running
-- qwen3:8b model pulled locally
+- ollama installed and running
+- qwen2.5 model pulled locally
+

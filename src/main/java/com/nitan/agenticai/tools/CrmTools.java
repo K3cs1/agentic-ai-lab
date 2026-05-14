@@ -1,0 +1,44 @@
+package com.nitan.agenticai.tools;
+
+import com.nitan.agenticai.domain.Address;
+import com.nitan.agenticai.domain.Client;
+import dev.langchain4j.agent.tool.Tool;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
+@Component
+@Slf4j
+public class CrmTools {
+
+  @Tool("Get Client by name")
+  public Client getClientByName(String name) {
+    log.info("Searching in the CRM for client with name: {} ", name);
+    if ("Acme Corporation".equals(name)) {
+      return new Client(
+          1L,
+          name,
+          Address.builder()
+              .city("New York")
+              .street("5th Avenue")
+              .state("NY")
+              .country("USA")
+              .zipCode("10001")
+              .build());
+    }
+
+    if ("Globex Corporation".equals(name)) {
+      return new Client(
+          2L,
+          name,
+          Address.builder()
+              .city("Bucharest")
+              .street("Victoriei Square")
+              .state("Bucharest")
+              .country("Romania")
+              .zipCode("200002")
+              .build());
+    }
+
+    throw new IllegalArgumentException("Client not found: " + name);
+  }
+}
