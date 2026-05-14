@@ -21,8 +21,8 @@ class VectorStoreInitializer {
 
   @Autowired private EmbeddingStore embeddingStore;
 
-  @BeforeAll // ⭐
-  static void createCollectionIfNotExists() {
+  @BeforeAll
+  static void create_collection_if_not_exists() {
     QdrantClient client =
         new QdrantClient(QdrantGrpcClient.newBuilder("localhost", 6334, false).build());
     String collectionName = "company-kb";
@@ -56,16 +56,22 @@ class VectorStoreInitializer {
   }
 
   @Test
-  void populateCollection() {
-    System.out.println("Populating collection with documents...");
+  void populate_collection() {
+    // populate the vector store
     Document doc1 =
         FileSystemDocumentLoader.loadDocument("src/main/resources/docs/HR-corporate card.txt");
+    doc1.metadata().put("department", "HR"); // ⭐
     Document doc2 =
         FileSystemDocumentLoader.loadDocument("src/main/resources/docs/HR-referals.txt");
+    doc2.metadata().put("department", "HR"); // ⭐
     Document doc3 =
         FileSystemDocumentLoader.loadDocument("src/main/resources/docs/HR-vacation.txt");
+    doc3.metadata().put("department", "HR"); // ⭐
+    Document doc4 =
+        FileSystemDocumentLoader.loadDocument("src/main/resources/docs/SUPPORT-contacts.txt");
+    doc4.metadata().put("department", "SUPPORT"); // ⭐
 
-    List<Document> documents = List.of(doc1, doc2, doc3);
+    List<Document> documents = List.of(doc1, doc2, doc3, doc4);
 
     EmbeddingStoreIngestor ingestor =
         EmbeddingStoreIngestor.builder()
@@ -74,6 +80,5 @@ class VectorStoreInitializer {
             .build();
 
     ingestor.ingest(documents);
-    System.out.println("Documents ingested successfully.");
   }
 }

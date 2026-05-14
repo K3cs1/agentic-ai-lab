@@ -1,14 +1,14 @@
-### 03-07
+### 03-08
 
-# Persistent vectore storage.
+# Filtered semantic search.
 
-Using qdrant as the vector database to store the document embeddings and perform similarity search.
+This version includes an example of performing a semantic similarity search with metadata filtering using Qdrant.
 
 # Prerequisites
 
 - Ollama installed and running
 - qwen2.5 model pulled locally
-- qdrant running locally
+- qdrant server running locally
 
 # SETUP
 Run VectorStoreInitializer

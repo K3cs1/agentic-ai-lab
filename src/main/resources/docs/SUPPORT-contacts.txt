@@ -1,0 +1,11 @@
+Support Group	            Office Description	            Domestic	        International	        Email	                            Extension
+Local Technology Support	Timisoara		                                      +40 372 286 030	      ISA.GRMS@accenture.com	          2286030
+Local Technology Support	Brasov		                                        +40 372 286 030	      ISA.GRMS@accenture.com	          2286030
+Local Technology Support	Bucharest		                                      +40 372 286 030	      ISA.GRMS@accenture.com	          2286030
+Local Technology Support	IASI		                                          +40 372 286 030	      ISA.GRMS@accenture.com	          2286030
+Local Technology Support	All locations	                  800-400-720	      +44 20-3350-0962	    Technology.Support@accenture.com
+Local Technology Support			                                              +40 372 836 530	      ISA.GRMS@accenture.com	          2836530
+Local Technology Support	Iasi UBC	**	                                    +40 372 286 030	      ISA.GRMS@accenture.com	          2286030
+Local Technology Support			                                              +40 372 286 030	      ISA.GRMS@accenture.com	          2286030
+Local Technology Support	Cluj Napoca – Hexagon Office		                  +40 372 286 030	      ISA.GRMS@accenture.com	          2286030
+Local Technology Support	Targu Mures		                                    +40 372 286 030	      ISA.GRMS@accenture.com	          2286030

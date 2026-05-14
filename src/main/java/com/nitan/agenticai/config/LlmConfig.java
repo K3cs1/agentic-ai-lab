@@ -16,17 +16,14 @@ class LlmConfig {
 
   @Bean
   EmbeddingModel embeddingModel() {
-    return OllamaEmbeddingModel.builder()
-        .baseUrl(BASE_OLLAMA_URL)
-        .modelName(MODEL)
-        .build();
+    return OllamaEmbeddingModel.builder().baseUrl(BASE_OLLAMA_URL).modelName(MODEL).build();
   }
 
   @Bean
   EmbeddingStore<TextSegment> embeddingStore() {
-    return QdrantEmbeddingStore.builder() // ⭐
+    return QdrantEmbeddingStore.builder()
         .host("localhost")
-        .port(6334) // ⚠️ just for evidence as the default port is 6334 anyway.
+        .port(6334)
         .collectionName("company-kb")
         .build();
   }
