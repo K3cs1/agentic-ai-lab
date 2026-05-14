@@ -1,23 +1,14 @@
-### 03-09
+### 03-10
 
-# Chunking.
+# Langchain4j RAG pipeline.
 
-Implementing chunking to split long documents into smaller, more manageable pieces for embedding and
-storage in the vector database. 
-
-This version includes an example of how to use a text splitter to divide documents into chunks, 
-allowing for more efficient embedding and retrieval in the vector database, especially for large 
-documents. 
-
-Chunking can help improve the relevance of search results by ensuring that the embeddings capture 
-more focused pieces of information, rather than trying to embed an entire long document into a single vector.
-
+Implementing a RAG pipeline using langchain4j's built-in RAG chain implementations to demonstrate 
+how to leverage the framework's capabilities for building a Retrieve-Augment-Generate pipeline with less
+boilerplate code and more built-in functionality.
 
 # Prerequisites
 
 - Ollama installed and running
 - qwen2.5 model pulled locally
-- qdrant server running and accessible
-
-# SETUP
-Run VectorStoreInitializer
+- qdrant server running
+- the kb-collection created and populated with documents.(see 03-09)
