@@ -1,5 +1,8 @@
 ### 06-06
 
-# Testing 
+# LLM as a judge.
 
-This version includes examples of tests for the guardrails and the pipeline. 
+An implementation of a judge that uses a language model to evaluate the quality of responses generated
+by an assistant. 
+
+Uses the qdrant database with the documents from 03-09
