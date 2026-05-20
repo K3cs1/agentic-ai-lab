@@ -1,11 +1,8 @@
 package com.nitan.agenticai.config;
 
 import com.nitan.agenticai.assistant.AgenticAssistant;
-import dev.langchain4j.mcp.McpToolProvider;
-import dev.langchain4j.mcp.client.DefaultMcpClient;
-import dev.langchain4j.mcp.client.McpClient;
-import dev.langchain4j.mcp.client.transport.McpTransport;
-import dev.langchain4j.mcp.client.transport.http.StreamableHttpMcpTransport;
+import com.nitan.agenticai.service.PromptService;
+import com.nitan.agenticai.tools.CurrencyTools;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.service.AiServices;
@@ -19,7 +16,7 @@ class LlmConfig {
   private static final String MODEL = "qwen2.5";
 
   @Bean
-  ChatModel chatModel() {
+  ChatModel chatLanguageModel() {
     return OllamaChatModel.builder()
         .baseUrl(BASE_OLLAMA_URL)
         .modelName(MODEL)
@@ -28,28 +25,11 @@ class LlmConfig {
   }
 
   @Bean
-  McpToolProvider toolProvider() {
-    McpTransport transport = StreamableHttpMcpTransport.builder()
-        .url("http://localhost:3001/mcp")
-        .logRequests(true)
-        .logResponses(true)
-        .build();
-
-    McpClient client = DefaultMcpClient.builder()
-        .key("my-server")
-        .transport(transport)
-        .build();
-
-    return McpToolProvider.builder()
-        .mcpClients(client)
-        .build();
-  }
-
-  @Bean
-  AgenticAssistant agenticAssistant(ChatModel chatModel) {
+  AgenticAssistant chatAssistant(ChatModel chatModel, PromptService promptService, CurrencyTools currencyTools) {
     return AiServices.builder(AgenticAssistant.class)
         .chatModel(chatModel)
-        .toolProvider(toolProvider())
+        .systemMessageProvider(context -> promptService.getSystemPrompt("assistant"))
+        .tools(currencyTools)
         .build();
   }
 }

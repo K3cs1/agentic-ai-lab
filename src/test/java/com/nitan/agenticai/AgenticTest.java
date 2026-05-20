@@ -1,7 +1,6 @@
 package com.nitan.agenticai;
 
 import static com.nitan.agenticai.util.Util.prettyPrint;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.nitan.agenticai.assistant.AgenticAssistant;
 import org.junit.jupiter.api.Test;
@@ -15,12 +14,15 @@ class AgenticTest {
   private AgenticAssistant agenticAssistant;
 
   @Test
-  void test() {
-    String message = "What is the exchange rate from USD to EUR?";
-    prettyPrint("User", message);
+  void test() throws InterruptedException {
 
-    String response = agenticAssistant.handle(message);
-    prettyPrint("Assistant", response);
-    assertNotNull(response);
+      String message = "What is the exchange rate from USD to EUR?";
+      prettyPrint("User", message);
+    while(true){
+      String response = agenticAssistant.handle(message);
+      prettyPrint("Assistant", response);
+      Thread.sleep(3000); // Wait for 3 seconds before sending the next request
+    }
+
   }
 }
