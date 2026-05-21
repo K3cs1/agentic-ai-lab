@@ -12,14 +12,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class ChatTest {
 
-  @Autowired private MyAssistant chatAssistant;// ⭐
+  @Autowired private MyAssistant chatAssistant;
 
   @Test
   void test() {
 
     String message = "Tell me a joke about AI.";
     prettyPrint("User", message);
-    String response = chatAssistant.chat(message);// ⭐
+    String response = chatAssistant.chat(message);
     prettyPrint("Assistant", response);
     assertNotNull(response);
     assertFalse(response.isBlank());

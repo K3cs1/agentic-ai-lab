@@ -1,7 +1,9 @@
 package com.nitan.agenticai.config;
 
+import com.nitan.agenticai.assistant.MyAssistant;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
+import dev.langchain4j.service.AiServices;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,6 +18,13 @@ class LlmConfig {
     return OllamaChatModel.builder()
         .baseUrl(BASE_OLLAMA_URL)
         .modelName(MODEL)
+        .build();
+  }
+
+  @Bean
+  MyAssistant chatAssistant(ChatModel chatModel) {
+    return AiServices.builder(MyAssistant.class) // ⚠️
+        .chatModel(chatModel) // ⚠️
         .build();
   }
 }

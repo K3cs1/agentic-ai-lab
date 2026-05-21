@@ -1,11 +1,13 @@
-### 01-03
+### 01-04
 
-# Hello langchain4j world
+# Using langchain4j's AiServices
 
-Basic example of using langchain4j.
+By using AiServices, we can define Java interfaces that are automatically implemented at runtime to 
+interact with LLMs such as OpenAI or Ollama.
 
-We build a ChatRequest with a user message, send it to the model, and read the response.
-
+When combined with dependency injection frameworks like Spring, these AI service implementations can 
+be managed as standard beans, making it straightforward to integrate conversational AI capabilities 
+into Java applications.
 
 # Prerequisites
 
