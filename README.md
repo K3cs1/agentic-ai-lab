@@ -1,13 +1,11 @@
-### 01-01 
+### 01-02
 
-# Stateless Chat Using the Ollama Library
+# Token streaming stateless chat
 
-This is a basic blocking chat simulation using the Ollama library.
-It demonstrates a simple stateless chat communication where users can send messages and receive responses from the chatbot.
-
-The chatbot generates responses based on the input messages, and the communication is done in a blocking manner, meaning that the user has to wait for the entire response to be generated before seeing it.
-
-Depending on the size of the response, this can lead to a less interactive experience, as users won't see any output until the entire response is ready.
+Introducing a basic token streaming chat using the ollama library. This version includes an 
+implementation of a token streaming chat endpoint that allows users to receive responses from the 
+chatbot in real-time as they are generated, providing a more interactive and engaging user 
+experience while also demonstrating the token streaming capabilities of the ollama library.
 
 # Prerequisites
 
