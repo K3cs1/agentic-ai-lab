@@ -1,10 +1,10 @@
 package com.nitan.agenticai;
 
 import static com.nitan.agenticai.util.Util.prettyPrint;
-import static com.nitan.agenticai.util.Util.prettyPrintLabel;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.nitan.agenticai.config.OllamaClient;
-import com.nitan.agenticai.util.Util;
+import com.nitan.agenticai.assistant.MyAssistant;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,21 +12,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class ChatTest {
 
-  @Autowired private OllamaClient ollamaClient;
+  @Autowired private MyAssistant chatAssistant;// ⭐
 
   @Test
   void test() {
-    chat("Explain hexagonal architecture?");
-  }
 
-  private void chat(String message) {
+    String message = "Tell me a joke about AI.";
     prettyPrint("User", message);
-    prettyPrintLabel("Ollama says:");
-    ollamaClient
-        .chatStream(message)
-        .doOnNext(Util::prettyPrintMessage) // streaming output
-        .blockLast(); // wait until completion
-
-    System.out.println("\n");
+    String response = chatAssistant.chat(message);// ⭐
+    prettyPrint("Assistant", response);
+    assertNotNull(response);
+    assertFalse(response.isBlank());
   }
 }
