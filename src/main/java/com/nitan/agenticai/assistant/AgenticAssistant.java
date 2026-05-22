@@ -1,6 +1,5 @@
 package com.nitan.agenticai.assistant;
 
-import dev.langchain4j.service.Result;
 import dev.langchain4j.service.SystemMessage;
 
 public interface AgenticAssistant {
@@ -8,5 +7,5 @@ public interface AgenticAssistant {
       """
           You are an AI assistant.
       """)
-  Result<String> handle(String message);
+  String handle(String message);
 }

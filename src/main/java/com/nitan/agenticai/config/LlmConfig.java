@@ -19,7 +19,6 @@ class LlmConfig {
     return OllamaChatModel.builder()
         .baseUrl(BASE_OLLAMA_URL)
         .modelName(MODEL)
-        .temperature(0.2)
         .build();
   }
 
