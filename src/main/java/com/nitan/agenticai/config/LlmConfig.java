@@ -2,11 +2,12 @@ package com.nitan.agenticai.config;
 
 import com.nitan.agenticai.assistant.ChatAssistant;
 import dev.langchain4j.memory.chat.ChatMemoryProvider;
-import dev.langchain4j.memory.chat.TokenWindowChatMemory;
-import dev.langchain4j.model.TokenCountEstimator;
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.service.AiServices;
+import dev.langchain4j.store.memory.chat.ChatMemoryStore;
+import dev.langchain4j.store.memory.chat.InMemoryChatMemoryStore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,32 +21,33 @@ class LlmConfig {
   ChatModel chatLanguageModel() {
     return OllamaChatModel.builder()
         .baseUrl(BASE_OLLAMA_URL)
-        .temperature(0.2)
         .modelName(MODEL)
-        .numCtx(2048) // ⭐
-        .numPredict(512) // ⭐
+        .numCtx(2048)
+        .numPredict(512)
         .build();
   }
 
-  @Bean // ⭐
-  TokenCountEstimator estimator() {
-    return new CustomTokenEstimator();
-  }
-
   @Bean
-  ChatAssistant chatAssistant(ChatModel chatModel) {
+  ChatAssistant statefulChatAssistant(ChatModel chatModel) {
     return AiServices.builder(ChatAssistant.class)
         .chatModel(chatModel)
         .chatMemoryProvider(chatMemoryProvider())
         .build();
   }
 
+
+  @Bean //⭐
+  ChatMemoryStore chatMemoryStore() {
+    return new InMemoryChatMemoryStore();
+  }
+
   @Bean
   ChatMemoryProvider chatMemoryProvider() {
     return memoryId ->
-        TokenWindowChatMemory.builder() // ⭐
+        MessageWindowChatMemory.builder()
             .id(memoryId)
-            .maxTokens(1000, estimator()) // ⚠️
+            .maxMessages(100)
+            .chatMemoryStore(chatMemoryStore()) //⭐
             .build();
   }
 }

@@ -1,14 +1,11 @@
-### 02-06
+### 02-07
 
-# Using a token window strategy
+# Using memory store
 
-Using ChatMemoryProvider with a token window strategy to manage the conversation history in a stateful 
-assistant implementation. 
+Using a chat memory store to persist the conversation history in a stateful assistant implementation.
 
-This version includes an example of how to configure ChatMemoryProvider to limit the conversation history 
-based on the number of tokens rather than the number of messages, providing a more fine-grained control 
-over the memory usage while still maintaining the necessary context for the assistant to generate relevant responses.
-
+This version includes an example of how to use  an in-memory store to save the conversation history, 
+allowing the assistant to maintain context across multiple interactions and sessions.
 
 # Prerequisites
 
