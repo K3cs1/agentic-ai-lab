@@ -2,7 +2,7 @@ package com.nitan.agenticai.assistant;
 
 import dev.langchain4j.service.SystemMessage;
 
-public interface MyAssistant {
+public interface FunnyAssistant {
 
   @SystemMessage(
       """
