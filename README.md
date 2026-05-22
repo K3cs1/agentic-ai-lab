@@ -1,9 +1,8 @@
-### 01-11
+### 02-01
 
-# Langchain4j using native structured output
+# Stateful assistant with manual memory
 
-This version includes an example of how to define an assistant using native structured output, allowing 
-for more precise and structured responses from the language model.
+Implementing a stateful assistant using langchain4j and "manual memory".
 
 # Prerequisites
 

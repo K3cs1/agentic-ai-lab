@@ -1,8 +1,6 @@
 package com.nitan.agenticai.config;
 
-import com.nitan.agenticai.assistant.FunnyAssistant;
-import com.nitan.agenticai.assistant.ResponseStyleClassifierAssistant;
-import com.nitan.agenticai.assistant.StrictAssistant;
+import com.nitan.agenticai.assistant.ChatAssistant;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.service.AiServices;
@@ -25,22 +23,8 @@ class LlmConfig {
   }
 
   @Bean
-  FunnyAssistant jokingAssistant(ChatModel chatModel) {
-    return AiServices.builder(FunnyAssistant.class)
-        .chatModel(chatModel)
-        .build();
-  }
-
-  @Bean
-  StrictAssistant strictAssistant(ChatModel chatModel) {
-    return AiServices.builder(StrictAssistant.class)
-        .chatModel(chatModel)
-        .build();
-  }
-
-  @Bean
-  ResponseStyleClassifierAssistant sentimentClassifierAssistant(ChatModel chatModel) {
-    return AiServices.builder(ResponseStyleClassifierAssistant.class)
+  ChatAssistant chaAssistant(ChatModel chatModel) {
+    return AiServices.builder(ChatAssistant.class)
         .chatModel(chatModel)
         .build();
   }

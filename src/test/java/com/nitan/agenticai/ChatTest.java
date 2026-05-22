@@ -1,42 +1,53 @@
 package com.nitan.agenticai;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static com.nitan.agenticai.util.Util.prettyPrint;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.nitan.agenticai.assistant.FunnyAssistant;
-import com.nitan.agenticai.assistant.ResponseStyleClassifierAssistant;
-import com.nitan.agenticai.assistant.StrictAssistant;
-import com.nitan.agenticai.domain.ResponseStyle;
-import com.nitan.agenticai.domain.Style;
+import com.nitan.agenticai.assistant.ChatAssistant;
+import dev.langchain4j.data.message.AiMessage;
+import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.data.message.UserMessage;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class ChatTest {
-  @Autowired private FunnyAssistant funnyAssistant;
 
-  @Autowired private StrictAssistant strictAssistant;
+  @Autowired
+  private ChatAssistant statefulChatAssistant;
 
-  @Autowired private ResponseStyleClassifierAssistant responseStyleClassifierAssistant;
-
-  private String question = "What is the best way to learn java?";
+  private List<ChatMessage> messages = new ArrayList<>();
 
   @Test
-  void should_return_funny() {
-    ResponseStyle response =
-        responseStyleClassifierAssistant.classify(
-            funnyAssistant.chat(question));
-    assertNotNull(response);
-    assertEquals(Style.FUNNY, response.style());
+  void test() {
+
+    String message = "My name is Nicusor";
+    pushMessage(UserMessage.from(message));
+    String response = statefulChatAssistant.chat(messages);
+    pushMessage(AiMessage.from(response));
+    prettyPrint("User", message);
+    prettyPrint("Assistant", response);
+
+    message = "What is the name of the capital of USA?";
+    pushMessage(UserMessage.from(message));
+    response = statefulChatAssistant.chat(messages);
+    pushMessage(AiMessage.from(response));
+    prettyPrint("Assistant", response);
+    prettyPrint("User", message);
+
+    message = "What is my name?";
+    pushMessage(UserMessage.from(message));
+    response = statefulChatAssistant.chat(messages);
+    pushMessage(AiMessage.from(response));
+    prettyPrint("User", message);
+    prettyPrint("Assistant", response);
+    assertTrue(response.contains("Nicusor"));
   }
 
-  @Test
-  void should_return_strict() {
-    ResponseStyle response =
-        responseStyleClassifierAssistant.classify(
-            strictAssistant.chat(question));
-    assertNotNull(response);
-    assertEquals(Style.STRICT, response.style());
+  private void pushMessage(ChatMessage message) {
+    messages.add(message);
   }
 }
