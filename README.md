@@ -1,8 +1,8 @@
-### 04-09
+### 04-10
 
-# Silent reAct.
+# ReAct with thinking.
 
-Implementing an assistant that can silently Reason and Act (reAct). 
+Implementing an assistant that can Reason and Act (reAct) and show thinking. 
 
 # Prerequisites
 - ollama installed and running

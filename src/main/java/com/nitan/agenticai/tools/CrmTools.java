@@ -1,5 +1,7 @@
 package com.nitan.agenticai.tools;
 
+import static com.nitan.agenticai.util.Util.prettyPrint;
+
 import com.nitan.agenticai.domain.Address;
 import com.nitan.agenticai.domain.Client;
 import com.nitan.agenticai.domain.ClientType;
@@ -13,7 +15,7 @@ public class CrmTools {
 
   @Tool("Get Client by name.")
   public Client getClientByName(String name) {
-    log.info("Searching in the CRM for client with name: {} ", name);
+    prettyPrint("getClientByName","Searching in the CRM for client with name: "+ name);
     if ("Acme Corporation".equals(name)) {
       return new Client(
           1L,
@@ -46,7 +48,7 @@ public class CrmTools {
   @Tool(
       "Get client type using the client's id.To be use before calculating the discount for a client.")
   public ClientType getClientTypeById(Long clientId) {
-    log.info("Searching for client type of the client: {}", clientId);
+    prettyPrint("getClientTypeById","Searching for client type of the client: "+ clientId);
     if (clientId == 1L) {
       return ClientType.GOLD;
     }

@@ -7,6 +7,7 @@ import com.nitan.agenticai.tools.PricingTools;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.service.AiServices;
+import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,7 +22,10 @@ class LlmConfig {
     return OllamaChatModel.builder()
         .baseUrl(BASE_OLLAMA_URL)
         .modelName(MODEL)
-        .temperature(0.2)
+        .think(true) //⭐
+        .returnThinking(true) //⭐
+        .temperature(0.0)
+        .listeners(List.of(new ThinkingLogger())) //⭐
         .build();
   }
 
