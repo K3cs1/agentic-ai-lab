@@ -21,7 +21,7 @@ class AgenticTest {
     while(true){
       String response = agenticAssistant.handle(message);
       prettyPrint("Assistant", response);
-      Thread.sleep(3000); // Wait for 3 seconds before sending the next request
+      Thread.sleep(3000);
     }
 
   }

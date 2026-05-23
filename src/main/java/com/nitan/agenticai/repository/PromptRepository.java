@@ -1,32 +1,52 @@
 package com.nitan.agenticai.repository;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nitan.agenticai.dto.Prompt;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import jakarta.annotation.PostConstruct;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.client.RestClient;
 
 @Repository
 @RequiredArgsConstructor
 public class PromptRepository {
 
-  private final JdbcTemplate jdbc;
+  @Value("${langfuse.authorizationHeader}")
+  private String authorizationHeader;
 
-  public Optional<Prompt> findByKey(String promptKey) {
-    String sql =
-        """
-            SELECT id, prompt_key, content
-            FROM prompts
-            WHERE prompt_key = ?  AND active = true
-            LIMIT 1
-            """;
+  private RestClient restClient;
 
-    return jdbc.query(sql, this::mapRow, promptKey).stream().findFirst();
+  @PostConstruct
+  private void init() {
+    restClient = RestClient.builder()
+        .baseUrl("http://localhost:3000")
+        .defaultHeader("Authorization", "Basic " + authorizationHeader)
+        .build();
   }
 
-  private Prompt mapRow(ResultSet rs, int rowNum) throws SQLException {
-    return new Prompt(rs.getLong("id"), rs.getString("prompt_key"), rs.getString("content"));
+  public Optional<Prompt> findByKey(String promptKey) {
+    try {
+      String json =
+          restClient
+              .get()
+              .uri("/api/public/v2/prompts/{name}?label=production", promptKey)
+              .retrieve()
+              .body(String.class);
+
+      // parse name, version, prompt text from JSON
+      JsonNode node = new ObjectMapper().readTree(json);
+      return Optional.of(
+          new Prompt(
+              null,
+              node.get("name").asText(),
+              node.get("version").asInt(),
+              node.get("prompt").asText()));
+    } catch (Exception e) {
+      e.printStackTrace();
+      return Optional.empty();
+    }
   }
 }

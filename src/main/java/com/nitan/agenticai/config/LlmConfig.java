@@ -20,7 +20,7 @@ class LlmConfig {
     return OllamaChatModel.builder()
         .baseUrl(BASE_OLLAMA_URL)
         .modelName(MODEL)
-        .temperature(0.2)
+        .temperature(0.8)
         .build();
   }
 
@@ -28,7 +28,12 @@ class LlmConfig {
   AgenticAssistant chatAssistant(ChatModel chatModel, PromptService promptService, CurrencyTools currencyTools) {
     return AiServices.builder(AgenticAssistant.class)
         .chatModel(chatModel)
-        .systemMessageProvider(context -> promptService.getSystemPrompt("assistant"))
+        .systemMessageProvider(context -> {
+          String s = promptService.getSystemPrompt("my-agentic-assistant");
+          System.out.println("System prompt: " + s);
+          return s;
+          }
+        )
         .tools(currencyTools)
         .build();
   }

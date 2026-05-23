@@ -1,26 +1,7 @@
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/agentic
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
-
+langfuse:
+  authorizationHeader: cGstbGYtMTA0ZjBlZTQtYWE1Yi00MmYwLTg1YjQtYjVlMmFmNTg2OWY4OnNrLWxmLWM2NGRhYzBjLWQwY2YtNDM3NS1hYjg0LWMyMzJmMWViMjAwYw==
 logging:
   level:
     io.netty.resolver.dns.DnsServerAddressStreamProviders: OFF
   pattern:
     console: "%m%n"
-
-otel:
-  service:
-    name: ai-workshop
-  traces:
-    exporter:
-        otlp:
-            endpoint: http://localhost:4318/v1/traces
-  metrics:
-    exporter:
-        otlp:
-            endpoint: http://localhost:4318/v1/metrics
-  logs:
-    exporter: none

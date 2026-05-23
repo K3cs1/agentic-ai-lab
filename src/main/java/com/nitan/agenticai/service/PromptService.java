@@ -13,7 +13,7 @@ public class PromptService {
 
   public String getSystemPrompt(String promptKey) {
     return repository
-        .findByKey(promptKey)
+        .findByKey("system/"+promptKey)
         .map(Prompt::content)
         .orElseThrow(() -> new IllegalStateException("Prompt not found: " + promptKey));
   }
