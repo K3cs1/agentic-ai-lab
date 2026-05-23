@@ -1,8 +1,8 @@
-### 04-10
+### 04-11
 
-# ReAct with thinking.
+# Streaming ReAct with thinking.
 
-Implementing an assistant that can Reason and Act (reAct) and show thinking. 
+Implementing an assistant that can Reason and Act (reAct) and showing thinking, all using streaming.
 
 # Prerequisites
 - ollama installed and running

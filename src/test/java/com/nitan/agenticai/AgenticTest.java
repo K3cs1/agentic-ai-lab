@@ -1,9 +1,9 @@
 package com.nitan.agenticai;
 
 import static com.nitan.agenticai.util.Util.prettyPrint;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.nitan.agenticai.assistant.AgenticAssistant;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,8 +17,24 @@ class AgenticTest {
   void test() {
     String message = "What is the final invoice amount for Acme Corporation?";
     prettyPrint("User", message);
-    String response = agenticAssistant.handle(message);
-    prettyPrint("Assistant", response);
-    assertNotNull(response);
+    AtomicBoolean isDone = new AtomicBoolean(false);
+    agenticAssistant
+        .handle(message)
+        .onPartialThinking(token -> System.out.print(token.text())) // ⭐ thinking tokens
+        .onPartialResponse(token -> System.out.print(token))
+        .onCompleteResponse(
+            response -> {
+              prettyPrint("\nAssistant", response.aiMessage().text());
+              isDone.set(true); // mark the response as done
+            })
+        .onError(Throwable::printStackTrace)
+        .start();
+    while (!isDone.get()) {
+      try {
+        Thread.sleep(2000); // wait for the response to complete
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
   }
 }

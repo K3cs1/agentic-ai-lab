@@ -1,11 +1,12 @@
 package com.nitan.agenticai.assistant;
 
 import dev.langchain4j.service.SystemMessage;
+import dev.langchain4j.service.TokenStream;
 
 public interface AgenticAssistant {
   @SystemMessage(
       """
           You are an AI assistant.
       """)
-  String handle(String message);
+  TokenStream handle(String message);
 }
