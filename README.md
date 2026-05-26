@@ -1,9 +1,9 @@
-### 04-05
+### 04-06
 
-# Tools chaining.
+# Human in the loop.
 
-Implement an AI assistant that can use and chain multiple tools to accomplish a task. 
+A simple example of human in the loop input.
 
 # Prerequisites
 - Ollama installed and running
-- qwen2.5 model pulled locally
+- qwen3:8b model pulled locally

@@ -1,26 +1,30 @@
 package com.nitan.agenticai;
 
 import static com.nitan.agenticai.util.Util.prettyPrint;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.nitan.agenticai.assistant.AgenticAssistant;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.WebApplicationType;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
 
-@SpringBootTest
 class AgenticTest {
 
-  @Autowired private AgenticAssistant agenticAssistant;
+  public static void main(String[] args) {
+    ConfigurableApplicationContext ctx =
+        new SpringApplicationBuilder(AgenticAiLabApplication.class)
+            .web(WebApplicationType.NONE)
+            .run(args);
 
-  @Test
-  void test() {
-    String message = "I have 500 USD. How much is that in EUR?";
+    AgenticAssistant assistant = ctx.getBean(AgenticAssistant.class);
 
-    prettyPrint("User", message);
+    String message = "What would be the weather in my city tomorrow?";
 
-    String response = agenticAssistant.handle(message);
-    prettyPrint("Assistant", response);
-    assertNotNull(response);
+    prettyPrint("User message",message);
+
+    String response = assistant.handle(message);
+
+    prettyPrint("Final response",response);
+
+    ctx.close();
   }
 }
