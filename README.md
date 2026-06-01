@@ -1,9 +1,9 @@
-### 01-08
+### 01-09
 
-# Simple structured output
+# Structured output example - specifying a schema.
 
-This is a simple structuted output example. It demonstrates how to pass instructions regarding 
-the expected output format and  constraints via prompt .
+Assistant responses can be structured. This version includes an example of how to define an assistant 
+that generates structured responses by specifying the output schema in the prompt.
 
 # Prerequisites
 
