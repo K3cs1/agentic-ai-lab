@@ -16,9 +16,14 @@ class ChatTest {
   @Test
   void test() {
 
+    String context = """
+      Employees in Bucharest can apply for vacation using the HR Portal.
+      Vacation requests require manager approval.
+      """;
     String message = "How to apply for vacation in Bucharest?";
+
     prettyPrint("User", message);
-    String response = chatAssistant.chat(message);
+    String response = chatAssistant.chat(context, message);
     prettyPrint("Assistant", response);
 
     assertNotNull(response);

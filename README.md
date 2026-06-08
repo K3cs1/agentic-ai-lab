@@ -1,15 +1,9 @@
-### 03-01
+### 03-02
 
-# Halucinating helpful assistant.
+# Augumented generation.
 
-Returning to stateless assistants by implementing a stateless assistant using langchain4j. In the 
-previous session the focus has been on memory, but memory is not knowledge. 
-
-This session is about giving the agent access to knowledge, and then letting it use that knowledge 
-to answer questions.
-
-This version is obviously trying to be helpful, but it is halucinating helpfulness, as it is not 
-actually connected to any knowledge source. 
+To help it answer the question the LLLM is given a context, which is information relevant to the question. 
+The LLLM can then use this context to generate a more accurate and relevant answer.
 
 # Prerequisites
 
