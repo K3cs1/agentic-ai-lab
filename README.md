@@ -1,11 +1,8 @@
-### 03-03
+### 03-04
 
-# Retrieval-Augumented generation.
+# Retrieval-Augumented generation with langchain4j.
 
-This is a simple implementation of RAG, which is a method for improving the performance of language
-models.
-The idea is to use a retriever to find relevant documents, and then use a model to generate a
-response based on the retrieved documents.
+This is a simple implementation of RAG, using langchain4j content retrieval abstraction.
 
 # Prerequisites
 
