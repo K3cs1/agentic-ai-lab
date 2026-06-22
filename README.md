@@ -1,27 +1,9 @@
-### 01-07
+### 01-08
 
-# Controlling LLM output behavior
+# Simple structured output
 
-Assistant responses controlled by setting: 
-
--temperature;
-
--top_k;
-
--top_p;
-
--seed;
-
--repetition penalties;
-
--frequence penalties;
-
--presence penalties;
-
-This is not an example but rather a placeholder for a discussion on how to control the output 
-behavior LLMs through the parameters above.
-
-See docs/temperature_sampling_demo.html
+This is a simple structuted output example. It demonstrates how to pass instructions regarding 
+the expected output format and  constraints via prompt .
 
 # Prerequisites
 
