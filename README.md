@@ -1,9 +1,9 @@
-### 01-10
+### 01-11
 
-# Native structured output example
- 
-This version includes an example of how to define an assistant that generates structured responses 
-using a responseFormat.
+# Langchain4j using native structured output
+
+This version includes an example of how to define an assistant using native structured output, allowing 
+for more precise and structured responses from the language model.
 
 # Prerequisites
 

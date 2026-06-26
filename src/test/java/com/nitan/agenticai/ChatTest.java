@@ -14,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class ChatTest {
-
   @Autowired private FunnyAssistant funnyAssistant;
 
   @Autowired private StrictAssistant strictAssistant;
@@ -25,14 +24,18 @@ class ChatTest {
 
   @Test
   void should_return_funny() {
-    ResponseStyle response = responseStyleClassifierAssistant.classify(funnyAssistant.chat(question));
+    ResponseStyle response =
+        responseStyleClassifierAssistant.classify(
+            funnyAssistant.chat(question));
     assertNotNull(response);
     assertEquals(Style.FUNNY, response.style());
   }
 
   @Test
   void should_return_strict() {
-    ResponseStyle response = responseStyleClassifierAssistant.classify(strictAssistant.chat(question));
+    ResponseStyle response =
+        responseStyleClassifierAssistant.classify(
+            strictAssistant.chat(question));
     assertNotNull(response);
     assertEquals(Style.STRICT, response.style());
   }
