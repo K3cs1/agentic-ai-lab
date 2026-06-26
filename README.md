@@ -1,9 +1,9 @@
-### 01-09
+### 01-10
 
-# Structured output example - specifying a schema.
-
-Assistant responses can be structured. This version includes an example of how to define an assistant 
-that generates structured responses by specifying the output schema in the prompt.
+# Native structured output example
+ 
+This version includes an example of how to define an assistant that generates structured responses 
+using a responseFormat.
 
 # Prerequisites
 

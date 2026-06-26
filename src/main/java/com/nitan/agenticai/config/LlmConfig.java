@@ -1,5 +1,6 @@
 package com.nitan.agenticai.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nitan.agenticai.assistant.FunnyAssistant;
 import com.nitan.agenticai.assistant.ResponseStyleClassifierAssistant;
 import com.nitan.agenticai.assistant.StrictAssistant;
@@ -25,23 +26,18 @@ class LlmConfig {
   }
 
   @Bean
-  FunnyAssistant sarcasticAssistant(ChatModel chatModel) {
-    return AiServices.builder(FunnyAssistant.class)
-        .chatModel(chatModel)
-        .build();
+  FunnyAssistant jokingAssistant(ChatModel chatModel) {
+    return AiServices.builder(FunnyAssistant.class).chatModel(chatModel).build();
   }
 
   @Bean
   StrictAssistant strictAssistant(ChatModel chatModel) {
-    return AiServices.builder(StrictAssistant.class)
-        .chatModel(chatModel)
-        .build();
+    return AiServices.builder(StrictAssistant.class).chatModel(chatModel).build();
   }
 
   @Bean
-  ResponseStyleClassifierAssistant sentimentClassifierAssistant(ChatModel chatModel) {
-    return AiServices.builder(ResponseStyleClassifierAssistant.class)
-        .chatModel(chatModel)
-        .build();
+  ResponseStyleClassifierAssistant sentimentClassifierAssistant(
+      ChatModel chatModel, ObjectMapper objectMapper) {
+    return new ResponseStyleClassifierAssistant(chatModel, objectMapper);
   }
 }
