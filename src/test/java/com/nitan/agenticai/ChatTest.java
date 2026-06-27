@@ -13,22 +13,18 @@ class ChatTest {
 
   @Test
   void test() {
-
-    String conversationId = "conversation_1";
-
     String message = "My name is Nicusor";
-    String response = assistant.chat(conversationId, message);
+    String response = assistant.chat("conversationId_1", message);
     prettyPrint("User", message);
     prettyPrint("Assistant", response);
 
-
     message = "What is the name of the capital of USA?";
-    response = assistant.chat(conversationId, message);
+    response = assistant.chat("conversationId_2", message);
     prettyPrint("User", message);
     prettyPrint("Assistant", response);
 
     message = "What is my name?";
-    response = assistant.chat(conversationId, message);
+    response = assistant.chat("conversationId_1", message);
     prettyPrint("User", message);
     prettyPrint("Assistant", response);
   }

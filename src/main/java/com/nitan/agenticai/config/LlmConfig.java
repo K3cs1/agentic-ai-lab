@@ -34,9 +34,12 @@ class LlmConfig {
 
   @Bean //⭐
   ChatMemoryProvider chatMemoryProvider() {
-    return memoryId -> MessageWindowChatMemory.builder()
+    return memoryId -> {
+      System.out.println("Creating new chat memory for memoryId: " + memoryId);
+      return MessageWindowChatMemory.builder()
         .id(memoryId)//⚠️
         .maxMessages(10)
         .build();
+    };
   }
 }

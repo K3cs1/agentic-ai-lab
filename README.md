@@ -1,9 +1,8 @@
-### 02-04
+### 02-05
 
-# Using langchain4j's chat memory provider.
+# AiServices under the hood
 
-Implementing a stateful assistant using ChatMemoryProvider, which allows distributed, multi-tenant, 
-multi-session chat memory management and swapping between different memory management solutions.
+Demonstrating the way AIServices manages under the hood the ChatMemoryProvider.
 
 # Prerequisites
 
