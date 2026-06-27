@@ -10,5 +10,5 @@ public interface ChatAssistant {
           You are a strict assistant.
           Be polite and answer with the shortest possible direct answer.
         """)
-  String chat(List<ChatMessage> messages);
+  String chat(String messages);
 }

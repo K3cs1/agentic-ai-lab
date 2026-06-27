@@ -14,29 +14,21 @@ import org.springframework.boot.test.context.SpringBootTest;
 class ChatTest {
   @Autowired private ChatAssistant statefulChatAssistant;
 
-  private final ChatMemory memory = MessageWindowChatMemory.withMaxMessages(10);//⭐
-
   @Test
   void test() {
 
     String message = "My name is Nicusor";
-    memory.add(UserMessage.from(message));//⚠️
-    String response = statefulChatAssistant.chat(memory.messages());
-    memory.add(AiMessage.from(response));//⚠️
+    String response = statefulChatAssistant.chat(message);
     prettyPrint("User", message);
     prettyPrint("Assistant", response);
 
     message = "What is the name of the USA first president?";
-    memory.add(UserMessage.from(message));//⚠️
-    response = statefulChatAssistant.chat(memory.messages());
-    memory.add(AiMessage.from(response));//⚠️
+    response = statefulChatAssistant.chat(message);
     prettyPrint("User", message);
     prettyPrint("Assistant", response);
 
     message = "What is my name?";
-    memory.add(UserMessage.from(message));//⚠️
-    response = statefulChatAssistant.chat(memory.messages());
-    memory.add(AiMessage.from(response));//⚠️
+    response = statefulChatAssistant.chat(message);
     prettyPrint("User", message);
     prettyPrint("Assistant", response);
   }

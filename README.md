@@ -1,9 +1,8 @@
-### 02-02
+### 02-03
 
-# Using langchain4j's chat memory
+# Delegating memory management to langchain4j
 
-Implementing a stateful assistant using ChatMemory, which is a built-in memory management solution
-provided by langchain4j.
+Shifting the memory management to langchain4j. The test becomes a mere client.
 
 # Prerequisites
 
