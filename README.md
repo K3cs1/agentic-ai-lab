@@ -1,9 +1,11 @@
-### 03-02
+### 03-03
 
-# Augumented generation.
+# Retrieval-Augumented generation.
 
-To help it answer the question the LLLM is given a context, which is information relevant to the question. 
-The LLLM can then use this context to generate a more accurate and relevant answer.
+This is a simple implementation of RAG, which is a method for improving the performance of language
+models.
+The idea is to use a retriever to find relevant documents, and then use a model to generate a
+response based on the retrieved documents.
 
 # Prerequisites
 
