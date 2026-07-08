@@ -1,8 +1,14 @@
-### 03-06
+### 03-07
 
-# Langchain4j in memory vector store search
+# Persistent vectore storage.
 
-Example of using langchain4j to populate an in-memory vector store, then retrieve information.
+Using qdrant as the vector database to store the document embeddings and perform similarity search.
 
 # Prerequisites
-None
+
+- Ollama installed and running
+- qwen2.5 model pulled locally
+- qdrant running locally
+
+# SETUP
+Run VectorStoreInitializer
