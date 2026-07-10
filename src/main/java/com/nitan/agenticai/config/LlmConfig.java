@@ -12,14 +12,14 @@ import org.springframework.context.annotation.Configuration;
 class LlmConfig {
 
   private static final String BASE_OLLAMA_URL = "http://localhost:11434";
-  private static final String MODEL = "qwen2.5";
+  private static final String MODEL = "qwen3:8b";
 
   @Bean
   ChatModel chatLanguageModel() {
     return OllamaChatModel.builder()
         .baseUrl(BASE_OLLAMA_URL)
         .modelName(MODEL)
-        .temperature(0.0)
+        .temperature(0.2)
         .build();
   }
 

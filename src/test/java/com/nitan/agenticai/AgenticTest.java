@@ -15,7 +15,7 @@ class AgenticTest {
 
   @Test
   void test() {
-    String message = "Can you tell the address of Acme Corporation?";
+    String message = "Can you tell the Acme Corporation's client type?";
     prettyPrint("User", message);
     String response = agenticAssistant.handle(message);
     prettyPrint("Assistant", response);

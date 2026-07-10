@@ -2,6 +2,7 @@ package com.nitan.agenticai.tools;
 
 import com.nitan.agenticai.domain.Address;
 import com.nitan.agenticai.domain.Client;
+import com.nitan.agenticai.domain.ClientType;
 import dev.langchain4j.agent.tool.Tool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -40,5 +41,19 @@ public class CrmTools {
     }
 
     throw new IllegalArgumentException("Client not found: " + name);
+  }
+
+  @Tool("Get ClientType by client id")//⭐
+  public ClientType getClientTypeById(Long clientId) {
+    log.info("Searching for client type of the client: {}", clientId);
+    if (clientId == 1L) {
+      return ClientType.GOLD;
+    }
+
+    if (clientId == 2L) {
+      return ClientType.BRONZE;
+    }
+
+    throw new IllegalArgumentException("Client not found: " + clientId);
   }
 }
