@@ -1,12 +1,11 @@
-### 04-01
+### 04-02
 
-# Manual Agentic Loop Implementation
+# Manual Agentic Loop with final answer tool
 
-This example demonstrates how to manually implement the core agentic loop without using an AI framework.
-The application acts as the orchestrator between the user, the LLM, and the available 
-tools and illustrates the fundamental mechanism behind agentic AI: the model autonomously decides 
-when to invoke a tool, while the application is responsible for executing the tool and continuing the conversation.
-
+This example introduces a custom @FinalAnswer annotation. 
+When a tool annotated with @FinalAnswer is invoked, the application returns its result directly to 
+the user, skipping the final LLM call. This optimization reduces both latency and cost while preserving 
+the manual orchestration of the agentic loop.
 
 # Prerequisites
 - Ollama installed and running

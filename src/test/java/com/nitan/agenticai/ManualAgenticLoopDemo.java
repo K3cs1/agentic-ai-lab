@@ -2,6 +2,7 @@ package com.nitan.agenticai;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nitan.agenticai.util.FinalAnswer;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -15,7 +16,7 @@ public class ManualAgenticLoopDemo {
 
   public static void main(String[] args) throws Exception {
 
-    String userMessage = "What is the exchange rate from USD to EUR";
+    String userMessage = "What is the exchange rate from USD to EUR?";
 
     // TOOL DEFINITION
     String toolSpec = """
@@ -83,6 +84,12 @@ public class ManualAgenticLoopDemo {
 
     Double toolResult = (Double) method.invoke(null, fromCurrency, toCurrency);
 
+    boolean isFinalAnswer = method.isAnnotationPresent(FinalAnswer.class);
+    if (isFinalAnswer) {
+      System.out.println("Skip the second LLM call.");
+      System.out.println("Final response: "+ toolResult);
+      return;
+    }
     // SEND THE TOOL RESULT BACK TO THE LLM
     request = """
         {
@@ -127,6 +134,7 @@ public class ManualAgenticLoopDemo {
 
   }
 
+  @FinalAnswer
   public static double getExchangeRate(String fromCurrency, String toCurrency) {
     System.out.println("Fetching exchange rate "+ fromCurrency +" ->"+ toCurrency);
     // Fake but fixed rate so you can verify correctness deterministically
