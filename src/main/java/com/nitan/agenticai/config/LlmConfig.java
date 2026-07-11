@@ -27,7 +27,7 @@ class LlmConfig {
   AgenticAssistant agenticAssistant(ChatModel chatModel, CurrencyTools currencyTools) {
     return AiServices.builder(AgenticAssistant.class)
         .chatModel(chatModel)
-        .tools(currencyTools) // ⭐
+        .tools(currencyTools)
         .build();
   }
 }
