@@ -1,8 +1,9 @@
-### 05-01
+### 05-02
 
-# Agentic Assistant
+# Tool provider example
 
-Reseting the context of the conversation and starting a new session with a simple langchain4j agentic assistant.
+This example demonstrates how to move tool registration from a static, hardcoded list to a LangChain4j's tool 
+provider abstraction — to provide tools dynamically, at request time, instead of wiring them once at start time.
 
 # Prerequisites
 - Ollama installed and running
