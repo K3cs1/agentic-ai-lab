@@ -1,9 +1,11 @@
-### 05-02
+### 05-03
 
-# Tool provider example
+# Tool search strategy
 
-This example demonstrates how to move tool registration from a static, hardcoded list to a LangChain4j's tool 
-provider abstraction — to provide tools dynamically, at request time, instead of wiring them once at start time.
+This example demonstrates how to scale tool selection beyond sending every tool's full specification 
+to the model on every request.
+As a tool ecosystem grows — sending dozens of tool schemas on every call bloats the prompt, 
+increases token cost and latency, and can confuse smaller models into picking the wrong tool. 
 
 # Prerequisites
 - Ollama installed and running
