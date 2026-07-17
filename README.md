@@ -1,12 +1,8 @@
-### 05-03
+### 05-04
 
-# Tool search strategy
+# Raw MCP client
 
-This example demonstrates how to scale tool selection beyond sending every tool's full specification 
-to the model on every request.
-As a tool ecosystem grows — sending dozens of tool schemas on every call bloats the prompt, 
-increases token cost and latency, and can confuse smaller models into picking the wrong tool. 
+This example demonstrates what it takes to use the MCP protocol itself — using a plain java client.
 
 # Prerequisites
-- Ollama installed and running
-- qwen2.5 model pulled locally
+- MCP server running (see branch mcp-server for instructions)
