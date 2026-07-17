@@ -1,12 +1,9 @@
 package com.nitan.agenticai.config;
 
 import com.nitan.agenticai.assistant.AgenticAssistant;
-import com.nitan.agenticai.tools.BilingTools;
-import com.nitan.agenticai.tools.CrmTools;
-import com.nitan.agenticai.tools.PricingTools;
-import dev.langchain4j.memory.chat.MessageWindowChatMemory;
-import dev.langchain4j.model.chat.StreamingChatModel;
-import dev.langchain4j.model.ollama.OllamaStreamingChatModel;
+import com.nitan.agenticai.tools.CurrencyTools;
+import dev.langchain4j.model.chat.ChatModel;
+import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.service.AiServices;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,28 +12,22 @@ import org.springframework.context.annotation.Configuration;
 class LlmConfig {
 
   private static final String BASE_OLLAMA_URL = "http://localhost:11434";
-  private static final String MODEL = "qwen3:8b";
+  private static final String MODEL = "qwen2.5";
 
-  @Bean // ⭐
-  StreamingChatModel chatModel() {
-    return OllamaStreamingChatModel.builder()
+  @Bean
+  ChatModel chatModel() {
+    return OllamaChatModel.builder()
         .baseUrl(BASE_OLLAMA_URL)
         .modelName(MODEL)
-        .think(true)
-        .returnThinking(true)
-        .temperature(0.0)
+        .temperature(0.2)
         .build();
   }
 
   @Bean
-  AgenticAssistant agenticAssistant(
-      StreamingChatModel chatModel,
-      CrmTools crmTools,
-      BilingTools bilingTools,
-      PricingTools pricingTools) {
+  AgenticAssistant agenticAssistant(ChatModel chatModel, CurrencyTools currencyTools) {
     return AiServices.builder(AgenticAssistant.class)
-        .streamingChatModel(chatModel)
-        .tools(crmTools, bilingTools, pricingTools)
+        .chatModel(chatModel)
+        .tools(currencyTools)
         .build();
   }
 }

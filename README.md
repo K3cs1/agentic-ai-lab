@@ -1,9 +1,9 @@
-### 04-11
+### 05-01
 
-# Streaming ReAct with thinking.
+# Agentic Assistant
 
-Implementing an assistant that can Reason and Act (reAct) and showing thinking, all using streaming.
+Reseting the context of the conversation and starting a new session with a simple langchain4j agentic assistant.
 
 # Prerequisites
-- ollama installed and running
-- qwen3:8b model pulled locally
+- Ollama installed and running
+- qwen2.5 model pulled locally
