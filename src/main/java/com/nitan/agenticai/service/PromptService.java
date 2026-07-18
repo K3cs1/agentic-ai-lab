@@ -17,4 +17,11 @@ public class PromptService {
         .map(Prompt::content)
         .orElseThrow(() -> new IllegalStateException("Prompt not found: " + promptKey));
   }
+
+  public String getToolDescription(String promptKey) {
+    return repository
+        .findByKey("tools/"+promptKey)
+        .map(Prompt::content)
+        .orElseThrow(() -> new IllegalStateException("Prompt not found: " + promptKey));
+  }
 }

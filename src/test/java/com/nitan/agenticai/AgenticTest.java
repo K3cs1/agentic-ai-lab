@@ -11,18 +11,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 class AgenticTest {
 
   @Autowired
-  private AgenticAssistant agenticAssistant;
+  AgenticAssistant chatAssistant;
 
   @Test
-  void test() throws InterruptedException {
-
-      String message = "What is the exchange rate from USD to EUR?";
-      prettyPrint("User", message);
-    while(true){
-      String response = agenticAssistant.handle(message);
-      prettyPrint("Assistant", response);
-      Thread.sleep(3000);
+  void test() {
+    String message = "What's the BTC to USD exchange rate?";
+    prettyPrint("User", message);
+    while (true) {
+      prettyPrint("Assistant", chatAssistant.handle(message));
+      try {
+        Thread.sleep(5000);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
     }
-
   }
 }
