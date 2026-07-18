@@ -14,6 +14,7 @@ import dev.langchain4j.service.tool.DefaultToolExecutor;
 import dev.langchain4j.service.tool.ToolExecutor;
 import dev.langchain4j.service.tool.ToolProvider;
 import dev.langchain4j.service.tool.ToolProviderResult;
+import io.opentelemetry.api.trace.Tracer;
 import java.lang.reflect.Method;
 import java.util.List;
 import org.springframework.aop.support.AopUtils;
@@ -27,17 +28,19 @@ class LlmConfig {
   private static final String MODEL = "qwen2.5";
 
   @Bean
-  ChatModel chatLanguageModel() {
-    return OllamaChatModel.builder()
-        .baseUrl(BASE_OLLAMA_URL)
-        .modelName(MODEL)
-        .logRequests(true)
-        .temperature(0.8)
-        .build();
+  ChatModel chatLanguageModel(Tracer tracer) {
+    return new ObservableChatModel(
+        OllamaChatModel.builder()
+            .baseUrl(BASE_OLLAMA_URL)
+            .modelName(MODEL)
+            .temperature(0.0)
+            .build(),
+        tracer,
+        MODEL);
   }
 
   @Bean
-  public ToolProvider toolProvider(List<AiTool> tools, PromptService promptService) {
+  public ToolProvider toolProvider(List<AiTool> tools, Tracer tracer, PromptService promptService) {
 
     return request -> {
       ToolProviderResult.Builder builder = ToolProviderResult.builder();
@@ -60,7 +63,8 @@ class LlmConfig {
               .addMetadata(ToolSpecification.METADATA_SEARCH_BEHAVIOR, SearchBehavior.SEARCHABLE)
               .build();
 
-          ToolExecutor executor = new DefaultToolExecutor(tool, method);
+          ToolExecutor executor = new TracingToolExecutor(new DefaultToolExecutor(tool, method),
+              tracer, spec.name());
           builder.add(spec, executor);
         }
       }
@@ -71,11 +75,11 @@ class LlmConfig {
 
   @Bean
   AgenticAssistant chatAssistant(ChatModel chatModel, List<AiTool> tools,
-      PromptService promptService) {
+      Tracer tracer,PromptService promptService) {
     return AiServices.builder(AgenticAssistant.class)
         .chatModel(chatModel)
         .systemMessageProvider(context -> promptService.getSystemPrompt("my-agentic-assistant"))
-        .toolProvider(toolProvider(tools, promptService))
+        .toolProvider(toolProvider(tools, tracer, promptService))
         .build();
   }
 }

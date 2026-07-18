@@ -74,6 +74,16 @@
       <artifactId>netty-resolver-dns-native-macos</artifactId>
       <classifier>osx-aarch_64</classifier>
     </dependency>
+
+    <dependency>
+      <groupId>io.opentelemetry</groupId>
+      <artifactId>opentelemetry-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.opentelemetry</groupId>
+      <artifactId>opentelemetry-context</artifactId>
+    </dependency>
+
   </dependencies>
 
   <build>

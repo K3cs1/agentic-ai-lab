@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Observability Stack</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+    }
+    .wrapper {
+      background: #ffffff;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    .mermaid {
+      background: #ffffff;
+      width: 100%;
+      max-width: 1400px;
+    }
+    .mermaid svg {
+      width: 100% !important;
+      height: auto !important;
+    }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+  <pre class="mermaid">
+%%{init: {'themeVariables': {'fontSize': '26px'}}}%%
+flowchart LR
+    Agent["Agent"]
+
+    subgraph Wrapper ["Tracing Wrapper"]
+        Ollama["Ollama"]
+    end
+
+    Agent -->|"LLM call"| Ollama
+    Agent -.->|traces + logs + metrics| Collector["OTel Collector"]
+    Wrapper -.->|traces| Collector
+
+    Collector -->|traces| Jaeger["Jaeger"]
+    Collector -->|traces| Langfuse["Langfuse"]
+    Collector -->|metrics| Prometheus["Prometheus"]
+    Collector -->|logs| Loki["Loki"]
+
+    Prometheus --> Grafana["Grafana"]
+    Loki --> Grafana
+
+    classDef greenNode fill:#e6fcf5,stroke:#0ca678,stroke-width:2px
+    classDef highlight fill:#ff922b,stroke:#d9480f,stroke-width:3px,color:#ffffff,font-weight:bold
+
+    class Agent,Collector,Jaeger,Prometheus,Loki,Grafana greenNode
+    class Langfuse,Ollama highlight
+
+    style Wrapper fill:#ffe8cc,stroke:#ff922b,stroke-width:2px,stroke-dasharray: 5 5
+
+    linkStyle 0,2,4 stroke:#d9480f,stroke-width:3px
+  </pre>
+</div>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default',
+    flowchart: {
+      nodeSpacing: 60,
+      rankSpacing: 80,
+      useMaxWidth: true
+    },
+    themeVariables: {
+      background: '#ffffff'
+    }
+  });
+</script>
+</body>
+</html>

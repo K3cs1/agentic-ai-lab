@@ -1,7 +1,15 @@
 langfuse:
   authorizationHeader: cGstbGYtMTA0ZjBlZTQtYWE1Yi00MmYwLTg1YjQtYjVlMmFmNTg2OWY4OnNrLWxmLWM2NGRhYzBjLWQwY2YtNDM3NS1hYjg0LWMyMzJmMWViMjAwYw==
 logging:
+  file:
+    name: /Users/nicusor.nita/microservices/ai-workshop/env/spring.log
   level:
     io.netty.resolver.dns.DnsServerAddressStreamProviders: OFF
   pattern:
-    console: "%m%n"
+    level: "%5p [traceId=%X{trace_id:-},spanId=%X{span_id:-}]"
+
+otel:
+  metrics:
+    exporter:
+      otlp:
+        endpoint: http://localhost:4318/v1/metrics
