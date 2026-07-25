@@ -3,21 +3,25 @@ package com.nitan.agenticai;
 import static com.nitan.agenticai.util.Util.prettyPrint;
 
 import com.nitan.agenticai.assistant.RefundAssistant;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.WebApplicationType;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
 
-@SpringBootTest
+
 class AgenticTest {
 
-  @Autowired
-  private RefundAssistant refundAssistant;
 
-  @Test
-  void test() {
+
+  public static void main(String[] args) throws Exception {
+
+    ConfigurableApplicationContext ctx =
+        new SpringApplicationBuilder(AgenticAiLabApplication.class)
+            .web(WebApplicationType.NONE)
+            .run(args);
+
+    RefundAssistant refundAssistant = ctx.getBean(RefundAssistant.class);
     String message = "Hi, I'd like a refund for my order 4471.";
     prettyPrint("User", message);
-    prettyPrint("Assistant", refundAssistant.handleRefundRequest(message).approved() ?
-        "Approved" : "Denied");
+    prettyPrint("Assistant", refundAssistant.handleRefundRequest(message).approved() ? "Approved" : "Denied");
   }
 }

@@ -1,6 +1,5 @@
-### 06-04
+### 06-05
 
-# Output Guardrails
+# Output guardrails with human approval
 
-This version includes an example of how to implement basic output guardrails. Output guardrails are 
-essential for ensuring that the model's responses adhere to certain safety, ethical, and quality standards.
+This version includes an example of how to implement output guardrails with human approval. 
