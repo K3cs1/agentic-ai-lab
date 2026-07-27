@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class HumanApprovalService {
 
-  public boolean requestApproval(double amount,String reason) {
+  public boolean requestApproval(String reason) {
     System.out.println("--- HUMAN REVIEW REQUIRED---");
-    System.out.println("The decision to approve a refund of " + amount + " EUR with reason \"" + reason + "\" is a possible policy infringement tentative");
+    System.out.println(reason);
     System.out.print("Approve this request? (y/n): ");
 
     Scanner scanner = new Scanner(System.in);

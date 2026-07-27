@@ -22,18 +22,20 @@ public class RefundLimitGuardrail implements OutputGuardrail {
 
   @Override
   public OutputGuardrailResult validate(AiMessage responseFromLLM) {
-    System.out.println("Validating LLM response: " + responseFromLLM.text());
     try {
+
+      System.out.println("Validating refund decision: " + responseFromLLM.text());
+
       RefundApprovalDecision decision =
           objectMapper.readValue(responseFromLLM.text(), RefundApprovalDecision.class);
-
-      if (decision.approved() && decision.requestedAmount() != null && decision.requestedAmount() > LIMIT) {
-        boolean approvedByHuman = humanService.requestApproval(decision.requestedAmount(), decision.reason());
+      System.out.println("Refund requested amount: " + decision.orderAmount() + ", Limit: " + LIMIT);
+      if (decision.approved() && decision.orderAmount() != null && decision.orderAmount() > LIMIT) {
+        boolean approvedByHuman = humanService.requestApproval(decision.reason());
 
         return approvedByHuman
             ? success()
             : failure("The refund requested amount of %.2f EUR exceeds the allowed limit of %.2f EUR and was rejected by human reviewer."
-                .formatted(decision.requestedAmount(), LIMIT));
+                .formatted(decision.orderAmount(), LIMIT));
       }
 
       return success();

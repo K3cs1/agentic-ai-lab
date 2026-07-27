@@ -1,6 +1,7 @@
 package com.nitan.agenticai.config;
 
 import com.nitan.agenticai.assistant.RefundAssistant;
+import com.nitan.agenticai.guardrails.PolicyComplianceGuardrail;
 import com.nitan.agenticai.guardrails.RefundLimitGuardrail;
 import com.nitan.agenticai.service.HumanApprovalService;
 import com.nitan.agenticai.service.PromptService;
@@ -33,6 +34,7 @@ class LlmConfig {
         .chatModel(chatModel)
         .tools(new OrderTools())
         .systemMessageProvider(context -> promptService.getPrompt("refundAssistant"))
+        .inputGuardrails(new PolicyComplianceGuardrail(promptService,chatModel))
         .outputGuardrails(new RefundLimitGuardrail(humanApprovalService))
         .build();
   }

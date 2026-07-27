@@ -1,5 +1,5 @@
-### 06-05
+### 06-06
 
-# Output guardrails with human approval
+# Testing 
 
-This version includes an example of how to implement output guardrails with human approval. 
+This version includes examples of tests for the guardrails and the pipeline. 

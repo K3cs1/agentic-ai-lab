@@ -3,6 +3,7 @@ package com.nitan.agenticai;
 import static com.nitan.agenticai.util.Util.prettyPrint;
 
 import com.nitan.agenticai.assistant.RefundAssistant;
+import com.nitan.agenticai.dto.RefundApprovalDecision;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -20,8 +21,11 @@ class AgenticTest {
             .run(args);
 
     RefundAssistant refundAssistant = ctx.getBean(RefundAssistant.class);
+
     String message = "Hi, I'd like a refund for my order 4471.";
     prettyPrint("User", message);
-    prettyPrint("Assistant", refundAssistant.handleRefundRequest(message).approved() ? "Approved" : "Denied");
+    RefundApprovalDecision decision = refundAssistant.handleRefundRequest(message);
+    System.out.println(decision);
+    prettyPrint("Assistant", decision.approved() ? "Approved" : "Denied");
   }
 }
