@@ -24,6 +24,11 @@ public class RefundLimitGuardrail implements OutputGuardrail {
   public OutputGuardrailResult validate(AiMessage responseFromLLM) {
     try {
 
+      if (responseFromLLM.hasToolExecutionRequests()) {
+        // Intermediate message — the model is calling a tool, not answering yet.
+        return success();
+      }
+
       System.out.println("Validating refund decision: " + responseFromLLM.text());
 
       RefundApprovalDecision decision =
