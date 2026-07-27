@@ -1,7 +1,6 @@
-### 06-03
+### 06-04
 
-# Agent-based input Guardrails
+# Output Guardrails
 
-This version includes an example of how to implement an agent-based input guardrail. It 
-evaluates the user message against the system prompt to detect any potential prompt injection 
-attempts.
+This version includes an example of how to implement basic output guardrails. Output guardrails are 
+essential for ensuring that the model's responses adhere to certain safety, ethical, and quality standards.
