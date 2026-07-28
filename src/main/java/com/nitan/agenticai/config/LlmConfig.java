@@ -1,6 +1,7 @@
 package com.nitan.agenticai.config;
 
 import com.nitan.agenticai.assistant.RefundAssistant;
+import com.nitan.agenticai.guardrails.PromptInjectionGuardrail;
 import com.nitan.agenticai.tools.OrderTools;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
@@ -28,6 +29,7 @@ class LlmConfig {
     return AiServices.builder(RefundAssistant.class)
         .chatModel(chatModel)
         .tools(new OrderTools())
+        .inputGuardrails(new PromptInjectionGuardrail())
         .build();
   }
 }

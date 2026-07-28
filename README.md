@@ -1,6 +1,7 @@
-### 06-01
+### 06-02
 
-# Prompt injection. 
+# Input Guardrails
 
-This version includes an example of how a malicious prompt can be injected, demonstrating the potential risks 
-and vulnerabilities associated with prompt injection attacks.
+This version includes an example of how to implement basic input guardrails with langchain4j. Input 
+guardrails are essential for ensuring that user inputs are validated and sanitized before being processed 
+by the system. This helps prevent errors, security vulnerabilities, and unexpected behavior.
