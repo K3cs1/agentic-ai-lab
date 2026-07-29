@@ -1,3 +1,9 @@
+#spring:
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/mydb
+#    username: myuser
+#    password: mypassword
+#    driver-class-name: org.postgresql.Driver
 langfuse:
   authorizationHeader: cGstbGYtMTA0ZjBlZTQtYWE1Yi00MmYwLTg1YjQtYjVlMmFmNTg2OWY4OnNrLWxmLWM2NGRhYzBjLWQwY2YtNDM3NS1hYjg0LWMyMzJmMWViMjAwYw==
 logging:
