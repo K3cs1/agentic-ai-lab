@@ -1,7 +1,7 @@
-### 06-02
+### 06-03
 
-# Input Guardrails
+# Agent-based input Guardrails
 
-This version includes an example of how to implement basic input guardrails with langchain4j. Input 
-guardrails are essential for ensuring that user inputs are validated and sanitized before being processed 
-by the system. This helps prevent errors, security vulnerabilities, and unexpected behavior.
+This version includes an example of how to implement an agent-based input guardrail. It 
+evaluates the user message against the system prompt to detect any potential prompt injection 
+attempts.

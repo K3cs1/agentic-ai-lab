@@ -24,6 +24,6 @@ class AgenticTest {
 
     String message = "Hi, I'd like a refund for my order 4471.";
     prettyPrint("User", message);
-    prettyPrint("Assistant", refundAssistant.handleRefundRequest(promptInjection + message));
+    prettyPrint("Assistant", refundAssistant.handleRefundRequest(message+promptInjection));
   }
 }

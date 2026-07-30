@@ -1,7 +1,8 @@
 package com.nitan.agenticai.config;
 
 import com.nitan.agenticai.assistant.RefundAssistant;
-import com.nitan.agenticai.guardrails.PromptInjectionGuardrail;
+import com.nitan.agenticai.guardrails.PolicyComplianceGuardrail;
+import com.nitan.agenticai.service.PromptService;
 import com.nitan.agenticai.tools.OrderTools;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
@@ -25,11 +26,12 @@ class LlmConfig {
   }
 
   @Bean
-  RefundAssistant chatAssistant(ChatModel chatModel) {
+  RefundAssistant refundAssistant(ChatModel chatModel, PromptService promptService) {
     return AiServices.builder(RefundAssistant.class)
         .chatModel(chatModel)
         .tools(new OrderTools())
-        .inputGuardrails(new PromptInjectionGuardrail())
+        .systemMessageProvider(context -> promptService.getPrompt("refundAssistant"))
+        .inputGuardrails(new PolicyComplianceGuardrail(promptService, chatModel))
         .build();
   }
 }
