@@ -1,6 +1,7 @@
 package com.nitan.agenticai.config;
 
 import com.nitan.agenticai.assistant.Assistant;
+import com.nitan.agenticai.tools.TicketResourceTool;
 import dev.langchain4j.mcp.client.DefaultMcpClient;
 import dev.langchain4j.mcp.client.McpClient;
 import dev.langchain4j.mcp.client.transport.McpTransport;
@@ -41,9 +42,10 @@ class LlmConfig {
     }
 
     @Bean
-    Assistant assistant(ChatModel chatModel) {
+    Assistant assistant(ChatModel chatModel, McpClient mcpClient, McpTransport mcpTransport) {
         return AiServices.builder(Assistant.class)
                 .chatModel(chatModel)
+                .tools(new TicketResourceTool(mcpClient))
                 .build();
     }
 }

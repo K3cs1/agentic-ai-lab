@@ -1,8 +1,8 @@
-### 07-06
+### 07-07
 
-# Using mcp resources.
+# Using mcp resource templates as tools.
 
-This version includes a basic example of how to use mcp resources.
+This version includes an example of how to use mcp resource template as a tool.
 
 # Prerequisites
 
