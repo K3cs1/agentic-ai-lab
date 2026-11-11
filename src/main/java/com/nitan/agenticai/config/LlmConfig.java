@@ -1,64 +1,67 @@
 package com.nitan.agenticai.config;
 
-import com.nitan.agenticai.assistant.ChatAssistant;
-import dev.langchain4j.data.segment.TextSegment;
+import com.nitan.agenticai.assistant.Assistant;
+import dev.langchain4j.mcp.McpToolProvider;
+import dev.langchain4j.mcp.client.DefaultMcpClient;
+import dev.langchain4j.mcp.client.McpClient;
+import dev.langchain4j.mcp.client.transport.McpTransport;
+import dev.langchain4j.mcp.client.transport.stdio.StdioMcpTransport;
 import dev.langchain4j.model.chat.ChatModel;
-import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
-import dev.langchain4j.model.ollama.OllamaEmbeddingModel;
-import dev.langchain4j.rag.content.retriever.ContentRetriever;
-import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.service.AiServices;
-import dev.langchain4j.store.embedding.EmbeddingStore;
-import dev.langchain4j.store.embedding.qdrant.QdrantEmbeddingStore;
+import dev.langchain4j.service.tool.ToolProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.nio.file.Path;
+import java.util.List;
 
 @Configuration
 class LlmConfig {
 
   private static final String BASE_OLLAMA_URL = "http://localhost:11434";
   private static final String CHAT_MODEL = "qwen2.5";
-  private static final String EMBEDDING_MODEL = "qwen3-embedding:4b";
 
   @Bean
   ChatModel chatLanguageModel() {
     return OllamaChatModel.builder()
         .baseUrl(BASE_OLLAMA_URL)
         .modelName(CHAT_MODEL)
-        .temperature(0.0)
+        .temperature(0.2)
         .build();
   }
 
+  @Bean(destroyMethod = "")
+  McpTransport mcpTransport() {
+    String javaBin = Path.of(System.getProperty("java.home"), "bin", "java").toString();
+    String logbackConfig = Path.of("src/main/resources/logback.xml").toAbsolutePath().toString();
+
+    return new StdioMcpTransport.Builder()
+                    .command(
+                            List.of(
+                                    javaBin,
+                                    "-Dlogback.configurationFile=" + logbackConfig,
+                                    "-classpath",
+                                    System.getProperty("java.class.path"),
+                                    "com.nitan.agenticai.mcp.GitToolServer"))
+                    .build();
+  }
+
+  @Bean(destroyMethod = "close")
+  McpClient mcpClient(McpTransport transport) {
+    return new DefaultMcpClient.Builder().transport(transport).build();
+  }
+
   @Bean
-  ChatAssistant chatAssistant(ChatModel chatModel) {
-    ContentRetriever retriever =
-        EmbeddingStoreContentRetriever.builder()
-            .embeddingModel(embeddingModel())
-            .embeddingStore(embeddingStore())
-            .maxResults(5)
-            .minScore(0.7)
-            .build();
-    return AiServices.builder(ChatAssistant.class)
+  ToolProvider mcpToolProvider(McpClient mcpClient) {
+    return McpToolProvider.builder().mcpClients(mcpClient).build();
+  }
+
+  @Bean
+  Assistant assistant(ChatModel chatModel, ToolProvider mcpToolProvider) {
+    return AiServices.builder(Assistant.class)
         .chatModel(chatModel)
-        .contentRetriever(retriever)
-        .build();
-  }
-
-  @Bean
-  EmbeddingModel embeddingModel() {
-    return OllamaEmbeddingModel.builder()
-        .baseUrl(BASE_OLLAMA_URL)
-        .modelName(EMBEDDING_MODEL)
-        .build();
-  }
-
-  @Bean
-  EmbeddingStore<TextSegment> embeddingStore() {
-    return QdrantEmbeddingStore.builder()
-        .host("localhost")
-        .port(6334)
-        .collectionName("company-kb")
+        .toolProvider(mcpToolProvider)
         .build();
   }
 }

@@ -1,8 +1,10 @@
-### 06-06
+### 07-02
 
-# LLM as a judge.
+# Simple example of using a stdio mcp server.
 
-An implementation of a judge that uses a language model to evaluate the quality of responses generated
-by an assistant. 
+This version includes an example of how to use a stdio mcp server.
 
-Uses the qdrant database with the documents from 03-09
+# Prerequisites
+
+- Ollama installed and running
+- qwen2.5 model pulled locally
