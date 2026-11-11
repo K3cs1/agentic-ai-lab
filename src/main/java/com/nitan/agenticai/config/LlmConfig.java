@@ -13,8 +13,6 @@ import dev.langchain4j.service.tool.ToolProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.List;
-
 @Configuration
 class LlmConfig {
 
@@ -41,14 +39,18 @@ class LlmConfig {
 
     @Bean(destroyMethod = "close")
     McpClient mcpClient(McpTransport transport) {
-        return new DefaultMcpClient.Builder().transport(transport).build();
+        return new DefaultMcpClient.Builder()
+                .key("mcp-server")
+                .transport(transport).build();
     }
 
     @Bean
     ToolProvider mcpToolProvider(McpClient mcpClient) {
         return McpToolProvider.builder()
                 .mcpClients(mcpClient)
-                .filterToolNames(List.of("git_log"))
+                .filter((client, tool) -> {
+                    return "mcp-server".equals(client.key()) && "git_log".equals(tool.name());
+                })
                 .build();
     }
 

@@ -1,8 +1,8 @@
-### 07-03
+### 07-04
 
-# Simple example of filtering mcp tools by name.
+# Simple example of filtering mcp tools.
 
-This version includes an example of how to filter the list of tools by name.
+This version includes an example of how to filter the list of tools.
 
 # Prerequisites
 
