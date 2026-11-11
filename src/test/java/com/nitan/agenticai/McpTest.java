@@ -1,36 +1,53 @@
 package com.nitan.agenticai;
 
-import dev.langchain4j.agent.tool.ToolExecutionRequest;
-import dev.langchain4j.agent.tool.ToolSpecification;
-import dev.langchain4j.mcp.client.McpClient;
-import dev.langchain4j.service.tool.ToolExecutionResult;
+import dev.langchain4j.mcp.client.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @SpringBootTest
 public class McpTest {
-
     @Autowired
     private McpClient mcpClient;
 
     @Test
-    void testMcpListTools() {
-        List<ToolSpecification> tools = mcpClient.listTools();
-        System.out.println(tools);
+    void listResources() {
+        List<McpResource> resources = mcpClient.listResources();
+        System.out.println("Resources: " + resources);
     }
 
     @Test
-    void testMcpCallTool() {
-        ToolExecutionResult result =
-                mcpClient.executeTool(
-                        ToolExecutionRequest.builder().name("git_log").arguments("{}").build());
-        System.out.println("-->" + result);
-        assertThat(result.isError()).isFalse();
-        assertThat(result.resultText()).isNotBlank();
+    void listResourceTemplates() {
+        List<McpResourceTemplate> templates = mcpClient.listResourceTemplates();
+        System.out.println("Resource templates: " + templates);
+    }
+
+    @Test
+    void readResource() {
+        McpReadResourceResult result = mcpClient.readResource("policy://vacation");
+        System.out.println("policy://vacation -->\n" + text(result));
+    }
+
+    @Test
+    void readResourceTemplate() {
+        McpReadResourceResult result = mcpClient.readResource("ticket://TCK-1");
+        System.out.println("ticket://TCK-1 --> " + text(result));
+    }
+
+    @Test
+    void readUnknownTicket() {
+        try {
+            mcpClient.readResource("ticket://TCK-999");
+            System.out.println("ticket://TCK-999 --> unexpectedly succeeded");
+        } catch (RuntimeException e) {
+            System.out.println("ticket://TCK-999 --> failed as expected: " + e.getMessage());
+        }
+    }
+
+    private static String text(McpReadResourceResult result) {
+        McpResourceContents contents = result.contents().get(0);
+        return ((McpTextResourceContents) contents).text();
     }
 }
