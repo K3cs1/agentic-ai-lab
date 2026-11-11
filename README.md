@@ -1,8 +1,8 @@
-### 07-02
+### 07-03
 
-# Simple example of using a streamable mcp server.
+# Simple example of filtering mcp tools by name.
 
-This version includes an example of how to use a streamable mcp server.
+This version includes an example of how to filter the list of tools by name.
 
 # Prerequisites
 

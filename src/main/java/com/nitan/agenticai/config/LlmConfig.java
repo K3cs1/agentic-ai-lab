@@ -13,9 +13,11 @@ import dev.langchain4j.service.tool.ToolProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 @Configuration
 class LlmConfig {
-    
+
     private static final String BASE_OLLAMA_URL = "http://localhost:11434";
     private static final String CHAT_MODEL = "qwen2.5";
 
@@ -46,6 +48,7 @@ class LlmConfig {
     ToolProvider mcpToolProvider(McpClient mcpClient) {
         return McpToolProvider.builder()
                 .mcpClients(mcpClient)
+                .filterToolNames(List.of("git_log"))
                 .build();
     }
 
