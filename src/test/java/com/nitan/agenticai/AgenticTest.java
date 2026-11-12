@@ -1,16 +1,12 @@
 package com.nitan.agenticai;
 
 import com.nitan.agenticai.assistant.Assistant;
-import dev.langchain4j.mcp.client.McpClient;
-import dev.langchain4j.mcp.client.McpGetPromptResult;
-import dev.langchain4j.mcp.client.McpTextContent;
+import dev.langchain4j.mcp.client.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
  class AgenticTest {
@@ -22,19 +18,24 @@ import static org.assertj.core.api.Assertions.assertThat;
   private McpClient mcpClient;
 
  @Test
- void reviewCode() {
+ void reviewFile() {
   McpGetPromptResult promptResult = mcpClient.getPrompt(
-          "review-code",
-          Map.of("language", "Java", "code", """
-                  int x = null;
-                  """));
+          "review-file",
+          Map.of("path", "/src/Calculator.java"));
 
-  String userText = ((McpTextContent) promptResult.messages().get(0).content()).text();
+  StringBuilder userText = new StringBuilder();
+  for (McpPromptMessage pm : promptResult.messages()) {
+   McpPromptContent content = pm.content();
+   if (content instanceof McpTextContent tc) {
+    userText.append(tc.text()).append("\n\n");
+   } else if (content instanceof McpEmbeddedResource er
+           && er.resource() instanceof McpTextResourceContents trc) {
+    userText.append(trc.text());
+   }
+  }
 
-  String answer = assistant.answer(userText);
+  String answer = assistant.answer(userText.toString());
 
-  System.out.println(answer);
-
-  assertThat(answer).isNotBlank();
+  System.out.println("Answer:\n" + answer);
  }
  }

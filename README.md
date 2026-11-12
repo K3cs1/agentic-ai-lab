@@ -1,8 +1,8 @@
-### 07-09
+### 07-10
 
-# Using a mcp prompt as user message.
+# Using a mcp prompt with embedded resources.
 
-This is an example of how to use a mcp prompt as a user message.
+This is an example of how to use a mcp prompt with an embedded resources.
 
 # Prerequisites
 
