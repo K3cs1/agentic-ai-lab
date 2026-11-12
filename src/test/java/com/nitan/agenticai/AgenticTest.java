@@ -13,6 +13,6 @@ class AgenticTest {
 
     @Test
     void test() {
-        System.err.println(assistant.answer("What are the last 3 commits in this git repository?"));
+        System.out.println(assistant.answer("What are the last 3 commits in this git repository?"));
     }
 }

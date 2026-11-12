@@ -21,7 +21,7 @@ public class McpTest {
     @Test
     void testMcpListTools() {
         List<ToolSpecification> tools = mcpClient.listTools();
-        System.err.println("--->" + tools);
+        System.out.println(tools);
     }
 
     @Test
@@ -29,7 +29,7 @@ public class McpTest {
         ToolExecutionResult result =
                 mcpClient.executeTool(
                         ToolExecutionRequest.builder().name("git_log").arguments("{}").build());
-        System.err.println("-->" + result);
+        System.out.println("-->" + result);
         assertThat(result.isError()).isFalse();
         assertThat(result.resultText()).isNotBlank();
     }
