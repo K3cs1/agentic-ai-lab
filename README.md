@@ -1,8 +1,8 @@
-### 07-11
+### 07-12
 
-# Using a mcp few-shot prompt with a chat model.
+# Using a mcp few-shot prompt with a chat request transformer.
 
-This is an example of how to use a mcp few-shot prompt with a chat model.
+This is an example of how to use a mcp few-shot prompt with a chat request transformer.
 
 # Prerequisites
 

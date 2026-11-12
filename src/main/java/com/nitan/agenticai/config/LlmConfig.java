@@ -1,13 +1,22 @@
 package com.nitan.agenticai.config;
 
+import com.nitan.agenticai.assistant.Assistant;
+import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.mcp.client.DefaultMcpClient;
 import dev.langchain4j.mcp.client.McpClient;
+import dev.langchain4j.mcp.client.McpGetPromptResult;
 import dev.langchain4j.mcp.client.transport.McpTransport;
 import dev.langchain4j.mcp.client.transport.http.StreamableHttpMcpTransport;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
+import dev.langchain4j.service.AiServices;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Configuration
 class LlmConfig {
@@ -36,5 +45,41 @@ class LlmConfig {
     @Bean(destroyMethod = "close")
     McpClient mcpClient(McpTransport transport) {
         return new DefaultMcpClient.Builder().transport(transport).build();
+    }
+
+    @Bean
+    Assistant assistant(ChatModel chatModel, McpClient mcpClient) {
+
+        return AiServices.builder(Assistant.class)
+                .chatModel(chatModel)
+                .chatRequestTransformer(request -> {
+
+                    // Get the actual user input from the AI Service request
+                    List<ChatMessage> messages = new ArrayList<>(request.messages());
+
+                    UserMessage currentUserMessage = (UserMessage) messages.remove(messages.size() - 1);
+
+                    String text = currentUserMessage.singleText();
+
+                    // Get the MCP prompt with the actual input
+                    McpGetPromptResult promptResult = mcpClient.getPrompt(
+                            "classify-sentiment",
+                            Map.of("text", text)
+                    );
+
+                    // Convert MCP prompt messages into LangChain4j messages
+                    List<ChatMessage> promptMessages = promptResult.messages()
+                            .stream()
+                            .map(message -> message.toChatMessage())
+                            .toList();
+
+                    // Replace the original user message with the rendered prompt
+                    messages.addAll(promptMessages);
+
+                    return request.toBuilder()
+                            .messages(messages)
+                            .build();
+                })
+                .build();
     }
 }
