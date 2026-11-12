@@ -1,8 +1,9 @@
-### 07-07
+### 07-08
 
-# Using mcp resource templates as tools.
+# Using a langchain4j resource presenter.
 
-This version includes an example of how to use mcp resource template as a tool.
+This version includes an example of how to use a langchain4j resource presenter to expose a mcp resource template as a
+tool.
 
 # Prerequisites
 
