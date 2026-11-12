@@ -1,41 +1,51 @@
 package com.nitan.agenticai;
 
-import com.nitan.agenticai.assistant.Assistant;
+import dev.langchain4j.data.message.AiMessage;
+import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.mcp.client.*;
+import dev.langchain4j.model.chat.ChatModel;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @SpringBootTest
- class AgenticTest {
+class AgenticTest {
 
-  @Autowired
-  private Assistant assistant;
+    @Autowired
+    private ChatModel chatModel;
 
-  @Autowired
-  private McpClient mcpClient;
+    @Autowired
+    private McpClient mcpClient;
 
- @Test
- void reviewFile() {
-  McpGetPromptResult promptResult = mcpClient.getPrompt(
-          "review-file",
-          Map.of("path", "/src/Calculator.java"));
+    @Test
+    void classifySentiment() {
+        McpGetPromptResult promptResult = mcpClient.getPrompt(
+                "classify-sentiment",
+                Map.of("text", "The battery died after one day"));
 
-  StringBuilder userText = new StringBuilder();
-  for (McpPromptMessage pm : promptResult.messages()) {
-   McpPromptContent content = pm.content();
-   if (content instanceof McpTextContent tc) {
-    userText.append(tc.text()).append("\n\n");
-   } else if (content instanceof McpEmbeddedResource er
-           && er.resource() instanceof McpTextResourceContents trc) {
-    userText.append(trc.text());
-   }
-  }
+        List<ChatMessage> messages = new ArrayList<>();
+        for (McpPromptMessage pm : promptResult.messages()) {
+            String text = ((McpTextContent) pm.content()).text();
+            if (pm.role() == McpRole.USER) {
+                messages.add(UserMessage.from(text));
+            } else {
+                messages.add(AiMessage.from(text));
+            }
+        }
 
-  String answer = assistant.answer(userText.toString());
+        String answer = chatModel.chat(messages).aiMessage().text();
 
-  System.out.println("Answer:\n" + answer);
- }
- }
+        messages.forEach(System.out::println);
+        System.out.println("----");
+        System.out.println(answer);
+
+        assertThat(answer.trim()).isEqualToIgnoringCase("NEGATIVE");
+    }
+}

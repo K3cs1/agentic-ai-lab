@@ -1,8 +1,8 @@
-### 07-10
+### 07-11
 
-# Using a mcp prompt with embedded resources.
+# Using a mcp few-shot prompt with a chat model.
 
-This is an example of how to use a mcp prompt with an embedded resources.
+This is an example of how to use a mcp few-shot prompt with a chat model.
 
 # Prerequisites
 
