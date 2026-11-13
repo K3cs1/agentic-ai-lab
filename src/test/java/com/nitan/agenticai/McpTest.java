@@ -1,11 +1,19 @@
 package com.nitan.agenticai;
 
-import dev.langchain4j.mcp.client.*;
+import dev.langchain4j.mcp.client.McpClient;
+import dev.langchain4j.mcp.client.McpGetPromptResult;
+import dev.langchain4j.mcp.client.McpPromptContent;
+import dev.langchain4j.mcp.client.McpPromptMessage;
+import dev.langchain4j.mcp.client.McpRole;
+import dev.langchain4j.mcp.client.McpTextContent;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 public class McpTest {
@@ -13,41 +21,79 @@ public class McpTest {
     private McpClient mcpClient;
 
     @Test
-    void listResources() {
-        List<McpResource> resources = mcpClient.listResources();
-        System.out.println("Resources: " + resources);
+    void getsCodeReviewerPersonaPrompt() {
+        McpGetPromptResult result = mcpClient.getPrompt(
+                "code-reviewer-persona", Map.of("language", "Java"));
+
+        assertThat(result.description()).isEqualTo("Reviewer persona");
+        assertThat(result.messages()).hasSize(1);
+        assertThat(result.messages().get(0).role()).isEqualTo(McpRole.USER);
+        assertThat(text(result.messages().get(0).content()))
+                .isEqualTo("You are a strict Java code reviewer. Be concise.");
     }
 
     @Test
-    void listResourceTemplates() {
-        List<McpResourceTemplate> templates = mcpClient.listResourceTemplates();
-        System.out.println("Resource templates: " + templates);
+    void getsReviewCodePrompt() {
+        String code = """
+                public int divide(int a, int b) {
+                    return a / b;
+                }
+                """;
+
+        McpGetPromptResult result = mcpClient.getPrompt(
+                "review-code", Map.of("language", "Java", "code", code));
+
+        assertThat(result.description()).isEqualTo("Code review request");
+        assertThat(result.messages()).hasSize(1);
+        assertThat(result.messages().get(0).role()).isEqualTo(McpRole.USER);
+        assertThat(text(result.messages().get(0).content()))
+                .isEqualTo("Review this Java code and list concrete problems:\n\n" + code);
     }
 
     @Test
-    void readResource() {
-        McpReadResourceResult result = mcpClient.readResource("policy://vacation");
-        System.out.println("policy://vacation -->\n" + text(result));
+    void getsReviewFilePromptWithEmbeddedResource() {
+        McpGetPromptResult result = mcpClient.getPrompt(
+                "review-file", Map.of("path", "/src/Calculator.java"));
+
+        assertThat(result.description()).isEqualTo("Review file");
+        assertThat(result.messages()).hasSize(2);
+        assertThat(result.messages().get(0).role()).isEqualTo(McpRole.USER);
+        assertThat(text(result.messages().get(0).content())).isEqualTo("Review this file:");
+
+        McpPromptMessage embeddedResource = result.messages().get(1);
+        assertThat(embeddedResource.role()).isEqualTo(McpRole.USER);
+        assertThat(embeddedResource.content().type()).isEqualTo(McpPromptContent.Type.RESOURCE);
+        System.out.println("Embedded resource: " + embeddedResource.content());
     }
 
     @Test
-    void readResourceTemplate() {
-        McpReadResourceResult result = mcpClient.readResource("ticket://TCK-1");
-        System.out.println("ticket://TCK-1 --> " + text(result));
+    void getsFewShotSentimentPrompt() {
+        McpGetPromptResult result = mcpClient.getPrompt(
+                "classify-sentiment", Map.of("text", "The support team was wonderful"));
+
+        assertThat(result.description()).isEqualTo("Sentiment");
+        assertThat(result.messages()).hasSize(5);
+        assertThat(result.messages())
+                .extracting(McpPromptMessage::role)
+                .containsExactly(
+                        McpRole.USER,
+                        McpRole.ASSISTANT,
+                        McpRole.USER,
+                        McpRole.ASSISTANT,
+                        McpRole.USER);
+        assertThat(texts(result.messages())).containsExactly(
+                "Classify: I love this product",
+                "POSITIVE",
+                "Classify: Delivery was a disaster",
+                "NEGATIVE",
+                "Classify: The support team was wonderful");
     }
 
-    @Test
-    void readUnknownTicket() {
-        try {
-            mcpClient.readResource("ticket://TCK-999");
-            System.out.println("ticket://TCK-999 --> unexpectedly succeeded");
-        } catch (RuntimeException e) {
-            System.out.println("ticket://TCK-999 --> failed as expected: " + e.getMessage());
-        }
+    private static String text(McpPromptContent content) {
+        return ((McpTextContent) content).text();
     }
 
-    private static String text(McpReadResourceResult result) {
-        McpResourceContents contents = result.contents().get(0);
-        return ((McpTextResourceContents) contents).text();
+    private static List<String> texts(List<McpPromptMessage> messages) {
+        return messages.stream().map(message -> text(message.content())).toList();
     }
 }

@@ -1,9 +1,8 @@
-### 07-08
+### 07-09
 
-# Using a langchain4j resource presenter.
+# Using a mcp prompt as user message.
 
-This version includes an example of how to use a langchain4j resource presenter to expose a mcp resource template as a
-tool.
+This is an example of how to use a mcp prompt as a user message.
 
 # Prerequisites
 
